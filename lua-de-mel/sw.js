@@ -1,4 +1,4 @@
-const CACHE = 'lua-de-mel-v1';
+const CACHE = 'lua-de-mel-v2';
 const ASSETS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
