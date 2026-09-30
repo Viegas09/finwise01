@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="no-js"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lua de mel em Paris</title>
+<meta name="theme-color" content="#1B2447">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Paris">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F7F8FB; --surface:#FFFFFF; --ink:#1B2447; --muted:#5B6485; --line:#DDE1EC;
+  --seine:#23766D; --rose:#B8456A; --gold:#B58A12; --grey:#8A91A8;
+  --seine-soft:#E3F1EF; --rose-soft:#F7E6EC; --gold-soft:#F6EFD9;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10152B; --surface:#182041; --ink:#EEF0F8; --muted:#A5ACC6; --line:#2C3560;
+    --seine:#5CC2B5; --rose:#E583A2; --gold:#E0B84A; --grey:#7D84A0;
+    --seine-soft:#16363A; --rose-soft:#3A1F31; --gold-soft:#3A3120;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10152B; --surface:#182041; --ink:#EEF0F8; --muted:#A5ACC6; --line:#2C3560;
+  --seine:#5CC2B5; --rose:#E583A2; --gold:#E0B84A; --grey:#7D84A0;
+  --seine-soft:#16363A; --rose-soft:#3A1F31; --gold-soft:#3A3120;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);
+  font-family:Figtree,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.5}
+h1,h2,h3{font-family:"Young Serif",Georgia,"Times New Roman",serif;font-weight:400;margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--seine);outline-offset:2px}
+a{color:var(--seine)}
+.wrap{max-width:760px;margin:0 auto;padding:24px 20px 110px}
+
+/* Cabeçalho */
+header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;
+  padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:8px}
+header.top h1{font-size:2.1rem;line-height:1.1}
+header.top p{margin:6px 0 0;color:var(--muted)}
+.countdown{text-align:right}
+.countdown strong{display:block;font-family:"Young Serif",Georgia,serif;font-size:2.4rem;line-height:1;color:var(--rose)}
+.countdown span{color:var(--muted);font-size:.9rem}
+
+/* Abas */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--surface);
+  border-top:1px solid var(--line);display:flex;justify-content:center;
+  padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.tabs .inner{display:flex;max-width:760px;width:100%}
+nav.tabs button{flex:1;background:none;border:0;padding:10px 4px 12px;font-size:.82rem;font-weight:600;
+  color:var(--muted);border-top:3px solid transparent;display:flex;flex-direction:column;align-items:center;gap:2px}
+nav.tabs button svg{width:22px;height:22px}
+nav.tabs button[aria-selected="true"]{color:var(--seine);border-top-color:var(--seine)}
+@media (min-width:760px){
+  nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);bottom:auto;border-top:0;border-bottom:1px solid var(--line);background:var(--paper)}
+  nav.tabs button{flex-direction:row;justify-content:center;gap:8px;font-size:.95rem;padding:14px 4px;border-top:0;border-bottom:3px solid transparent}
+  nav.tabs button[aria-selected="true"]{border-bottom-color:var(--seine)}
+  .wrap{padding-bottom:48px}
+}
+section.panel{display:none;padding-top:20px}
+section.panel.active{display:block}
+.lead{color:var(--muted);margin:6px 0 20px;max-width:62ch}
+.sync{font-size:.82rem;color:var(--muted);margin-top:4px}
+
+/* Linha do roteiro */
+.line{list-style:none;margin:0;padding:0;position:relative}
+.stop{position:relative;padding-left:44px}
+.stop::before{content:"";position:absolute;left:15px;top:0;bottom:0;width:6px;background:var(--c)}
+.stop:first-child::before{top:22px}
+.stop:last-child::before{bottom:calc(100% - 22px)}
+.stop .dot{position:absolute;left:6px;top:10px;width:24px;height:24px;border-radius:50%;
+  background:var(--surface);border:5px solid var(--c)}
+.stop.today .dot{background:var(--c)}
+.day-btn{width:100%;text-align:left;padding:8px 0 16px;display:flex;justify-content:space-between;gap:12px;align-items:flex-start;cursor:pointer;list-style:none;-webkit-tap-highlight-color:transparent}
+.day-btn::-webkit-details-marker{display:none}
+.day-btn::marker{content:""}
+.day-btn .when{font-size:.85rem;color:var(--muted);font-weight:600}
+.day-btn h3{font-size:1.3rem;margin-top:2px}
+.day-btn .base{font-size:.9rem;color:var(--muted)}
+.chev{flex:none;width:20px;height:20px;margin-top:6px;transition:transform .2s;color:var(--muted)}
+details[open] > .day-btn .chev{transform:rotate(180deg)}
+.day-body{padding:0 0 24px}
+.tl{list-style:none;margin:0 0 12px;padding:0;border-left:2px dotted var(--line)}
+.tl li{display:grid;grid-template-columns:64px 1fr;gap:8px;padding:6px 0 6px 12px}
+.tl .h{font-weight:700;font-variant-numeric:tabular-nums}
+.flag{display:inline-block;font-size:.8rem;font-weight:600;padding:2px 8px;border-radius:99px;margin:0 6px 6px 0}
+.flag.pend{background:var(--gold-soft);color:var(--gold)}
+.flag.info{background:var(--seine-soft);color:var(--seine)}
+.flag.rose{background:var(--rose-soft);color:var(--rose)}
+.cost{font-size:.9rem;color:var(--muted);margin:0 0 10px}
+.note{width:100%;min-height:64px;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:10px;resize:vertical}
+.note-label{font-size:.85rem;font-weight:600;color:var(--muted);display:block;margin-bottom:4px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.85rem;color:var(--muted);margin-bottom:18px}
+.legend i{display:inline-block;width:14px;height:6px;border-radius:3px;margin-right:6px;vertical-align:middle}
+
+/* Reservas */
+.booking{border-top:1px solid var(--line);padding:18px 0}
+.booking:first-of-type{border-top:0}
+.booking h3{font-size:1.25rem}
+.booking .kind{font-size:.85rem;font-weight:600;color:var(--rose)}
+.booking dl{display:grid;grid-template-columns:max-content 1fr;gap:4px 16px;margin:10px 0 0}
+.booking dt{color:var(--muted)}
+.booking dd{margin:0}
+.route{display:flex;align-items:center;gap:12px;margin-top:8px;font-family:"Young Serif",Georgia,serif;font-size:1.5rem}
+.route small{display:block;font-family:Figtree,system-ui,sans-serif;font-size:.85rem;color:var(--muted)}
+.route .arrow{flex:1;height:2px;background:var(--line);position:relative;min-width:30px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);
+  border-radius:99px;padding:6px 14px;text-decoration:none;color:var(--ink);font-weight:600;font-size:.9rem}
+.btn.primary{background:var(--seine);border-color:var(--seine);color:#fff}
+
+/* Checklist */
+.group h3{font-size:1.1rem;margin:22px 0 8px}
+.check{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.check input{width:20px;height:20px;margin-top:2px;accent-color:var(--seine);flex:none}
+.check.done span{text-decoration:line-through;color:var(--muted)}
+.progress{height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin:8px 0 4px}
+.progress b{display:block;height:100%;background:var(--seine)}
+
+/* Orçamento */
+.totals{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:12px}
+.tot{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.tot span{font-size:.85rem;color:var(--muted)}
+.tot strong{display:block;font-size:1.3rem;font-variant-numeric:tabular-nums}
+.stack{display:flex;height:14px;border-radius:7px;overflow:hidden;background:var(--line);margin:14px 0 6px;position:relative}
+.stack b{height:100%}
+.stack-legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.85rem;color:var(--muted)}
+.stack-legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.warn{background:var(--rose-soft);color:var(--ink);border-left:4px solid var(--rose);padding:10px 14px;border-radius:6px;margin:14px 0}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.85rem;color:var(--muted);font-weight:600}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tfoot td{font-weight:700}
+form.add{display:grid;grid-template-columns:1fr 110px 80px;gap:8px;margin:12px 0}
+form.add input,form.add select{border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:9px 10px;min-width:0}
+form.add .full{grid-column:1/-1}
+form.add button{grid-column:1/-1}
+@media (min-width:600px){form.add{grid-template-columns:1fr 120px 80px 150px auto}form.add .full,form.add button{grid-column:auto}}
+.x{background:none;border:0;color:var(--muted);font-size:1.1rem;padding:0 4px}
+.empty{color:var(--muted);padding:12px 0}
+.field{display:flex;align-items:center;gap:8px;margin:8px 0}
+.field input{width:90px;border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:6px 8px}
+
+/* Guia */
+.guide h3{font-size:1.15rem;margin:22px 0 6px}
+.guide p{margin:0 0 8px;max-width:65ch}
+.conv{display:flex;gap:10px;flex-wrap:wrap;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.conv input{width:120px;border:1px solid var(--line);border-radius:8px;background:var(--paper);padding:8px}
+.conv output{font-weight:700;font-size:1.15rem}
+.no-js nav.tabs{display:none}
+.no-js section.panel{display:block;border-top:1px solid var(--line);margin-top:28px}
+.nojs-note{background:var(--gold-soft);border-left:4px solid var(--gold);padding:12px 14px;border-radius:6px;margin:16px 0 0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Paris, 19 a 29 de outubro</h1>
+      <p>Lua de mel de Vinicius e Marcela: Disney, depois o Marais.</p>
+    </div>
+    <div class="countdown" id="countdown" aria-live="polite"><strong>20</strong><span>dias para o embarque</span></div>
+  </header>
+  <noscript><p class="nojs-note">Este visualizador está mostrando só o texto do app. Para marcar itens, anotar e registrar gastos, abra o link do app no Chrome ou no Safari.</p></noscript>
+
+  <nav class="tabs" role="tablist" aria-label="Seções">
+    <div class="inner">
+      <button role="tab" id="t-roteiro" aria-controls="roteiro" aria-selected="true" tabindex="0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="6" cy="5" r="2"></circle><circle cx="6" cy="19" r="2"></circle><circle cx="18" cy="12" r="2"></circle><path d="M6 7v10M8 5h4a4 4 0 0 1 4 4v1"></path></svg>Roteiro</button>
+      <button role="tab" id="t-reservas" aria-controls="reservas" aria-selected="false" tabindex="-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9a2 2 0 0 0 0 4v5h18v-5a2 2 0 0 1 0-4V6H3z"></path><path d="M14 6v12" stroke-dasharray="2 2"></path></svg>Reservas</button>
+      <button role="tab" id="t-afazer" aria-controls="afazer" aria-selected="false" tabindex="-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6l2 2 3-3M4 13l2 2 3-3M12 7h8M12 14h8M12 20h8"></path></svg>A fazer</button>
+      <button role="tab" id="t-orcamento" aria-controls="orcamento" aria-selected="false" tabindex="-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"></rect><path d="M3 10h18M16 15h2"></path></svg>Orçamento</button>
+      <button role="tab" id="t-guia" aria-controls="guia" aria-selected="false" tabindex="-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v6M12 7.5v.5"></path></svg>Guia</button>
+    </div>
+  </nav>
+
+  <!-- ROTEIRO -->
+  <section class="panel active" id="roteiro" role="tabpanel" aria-labelledby="t-roteiro">
+    <h2>Dia a dia</h2>
+    <p class="lead">Cada dia tem uma âncora com hora marcada; o resto é flexível. Toque num dia para ver os horários e deixar anotações para os dois.</p>
+    <div class="legend"><span><i style="background:var(--grey)"></i>Viagem</span><span><i style="background:var(--gold)"></i>Disney</span><span><i style="background:var(--seine)"></i>Paris</span></div>
+    <ol class="line" id="line">
+   <li class="stop" style="--c:var(--grey)">
+    <span class="dot" aria-hidden="true"></span>
+    <details>
+    <summary class="day-btn">
+      <span><span class="when">Seg, 19 out</span><h3>Partida</h3><span class="base">São Paulo</span></span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+    </summary>
+    <div class="day-body">
+      
+      <ul class="tl"><li><span class="h">15h</span><span>Chegar em Guarulhos (3 h antes)</span></li><li><span class="h">18h</span><span>Voo LATAM para Paris</span></li></ul>
+      
+      <label class="note-label" for="n-d19">Anotações do dia</label>
+      <textarea class="note" id="n-d19" data-day="d19" placeholder="Restaurante que alguém indicou, horário de um show, o que levar..."></textarea>
+    </div>
+    </details>
+   </li>
+   <li class="stop" style="--c:var(--grey)">
+    <span class="dot" aria-hidden="true"></span>
+    <details>
+    <summary class="day-btn">
+      <span><span class="when">Ter, 20 out</span><h3>Chegada e descanso</h3><span class="base">Montévrain</span></span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+    </summary>
+    <div class="day-body">
+      <span class="flag info">Comprar os 2 Navigo Semaine no CDG</span>
+      <ul class="tl"><li><span class="h">10h15</span><span>Pouso em CDG</span></li><li><span class="h">10h45</span><span>Imigração (cadastro biométrico) e malas</span></li><li><span class="h">12h</span><span>RER B + RER A até Val d'Europe (cerca de 1h30) ou TGV até Marne-la-Vallée–Chessy</span></li><li><span class="h">14h</span><span>Check-in no Airbnb e descanso</span></li><li><span class="h">16h</span><span>Supermercado; Val d'Europe se houver energia</span></li><li><span class="h">19h</span><span>Jantar cedo e dormir (jet lag)</span></li></ul>
+      <p class="cost">Custo do dia para os dois: cerca de €60</p>
+      <label class="note-label" for="n-d20">Anotações do dia</label>
+      <textarea class="note" id="n-d20" data-day="d20" placeholder="Restaurante que alguém indicou, horário de um show, o que levar..."></textarea>
+    </div>
+    </details>
+   </li>
+   <li class="stop" style="--c:var(--gold)">
+    <span class="dot" aria-hidden="true"></span>
+    <details>
+    <summary class="day-btn">
+      <span><span class="when">Qua, 21 out</span><h3>Disneyland Park</h3><span class="base">Montévrain</span></span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+    </summary>
+    <div class="day-body">
+      
+      <ul class="tl"><li><span class="h">9h</span><span>Nos portões antes da abertura (confirmar no app)</span></li><li><span class="h">Manhã</span><span>Peter Pan's Flight, Big Thunder Mountain, Star Wars Hyperspace Mountain</span></li><li><span class="h">12h</span><span>Almoço</span></li><li><span class="h">Tarde</span><span>Pirates of the Caribbean, Phantom Manor, Indiana Jones, It's a Small World, desfile</span></li><li><span class="h">Noite</span><span>Show no castelo e volta</span></li></ul>
+      <p class="cost">Custo do dia para os dois: ingressos + cerca de €90 de comida</p>
+      <label class="note-label" for="n-d21">Anotações do dia</label>
+      <textarea class="note" id="n-d21" data-day="d21" placeholder="Restaurante que alguém indicou, horário de um show, o que levar..."></textarea>
+    </div>
+    </details>
+   </li>
+   <li class="stop" style="--c:var(--gold)">
+    <span class="dot" aria-hidden="true"></span>
+    <details>
+    <summary class="day-btn">
+      <span><span class="when">Qui, 22 out</span><h3>Disney Adventure World</h3><span class="base">Montévrain</span></span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+    </summary>
+    <div class="day-body">
+      <span class="flag pend">Decidir: 2º dia na Disney ou dia livre</span>
+      <ul class="tl"><li><span class="h">9h</span><span>Direto para World of Frozen (Frozen Ever After)</span></li><li><span class="h">Manhã</span><span>Avengers Campus, Ratatouille, Crush's Coaster, Tower of Terror</span></li><li><span class="h">12h</span><span>Almoço</span></li><li><span class="h">Tarde</span><span>Voltar ao Disneyland Park para repetir favoritos</span></li><li><span class="h">Noite</span><span>Show noturno (horário no app)</span></li></ul>
+      <p class="cost">Custo do dia para os dois: ingressos + cerca de €90 de comida</p>
+      <label class="note-label" for="n-d22">Anotações do dia</label>
+      <textarea class="note" id="n-d22" data-day="d22" placeholder="Restaurante que alguém indicou, horário de um show, o que levar..."></textarea>
+    </div>
+    </details>
+   </li>
+   <li class="stop" style="--c:var(--seine)">
+    <span class="dot" aria-hidden="true"></span>
+    <details>
+    <summary class="day-btn">
+      <span><span class="when">Sex, 23 out</span><h3>Mudança para o Marais</h3><span class="base">Paris</span></span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+    </summary>
+    <div class="day-body">
+      
+      <ul class="tl"><li><span class="h">10h</span><span>Check-out em Montévrain</span></li><li><span class="h">11h</span><span>RER A até Châtelet–Les Halles, depois metrô</span></li><li><span class="h">12h30</span><span>Almoço no Marché des Enfants Rouges</span></li><li><span class="h">15h</span><span>Check-in no Airbnb e descanso</span></li><li><span class="h">17h</span><span>Place des Vosges e Rue des Rosiers a pé</span></li><li><span class="h">20h</span><span>Jantar romântico no Marais</span></li></ul>
+      <p class="cost">Custo do dia para os dois: cerca de €100</p>
+      <label class="note-label" for="n-d23">Anotações do dia</label>
+      <textarea class="note" id="n-d23" data-day="d23" placeholder="Restaurante que alguém indicou, horário de um show, o que levar..."></textarea>
+    </div>
+    </details>
+   </li>
+   <li class="stop" style="--c:var(--seine)">
+    <span class="dot" aria-hidden="true"></span>
+    <details>
+    <summary class="day-btn">
+      <span><span class="when">Sáb, 24 out</span><h3>Torre Eiffel</h3><span class="base">Paris</span></span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+    </summary>
+    <div class="day-body">
+      
+      <ul class="tl"><li><span class="h">9h30</span><span>Trocadéro para as fotos</span></li><li><span class="h">10h30</span><span>Torre Eiffel, 2º andar, horário reservado</span></li><li><span class="h">13h</span><span>Almoço ou piquenique no Champ de Mars</span></li><li><span class="h">Tarde</span><span>Invalides e Pont Alexandre III</span></li><li><span class="h">Noite</span><span>Torre cintilando (5 min a cada hora cheia)</span></li></ul>
+      <p class="cost">Custo do dia para os dois: €47 de ingressos + cerca de €100</p>
+      <label class="note-label" for="n-d24">Anotações do dia</label>
+      <textarea class="note" id="n-d24" data-day="d24" placeholder="Restaurante que alguém indicou, horário de um show, o que levar..."></textarea>
+    </div>
+    </details>
+   </li>
+   <li class="stop" style="--c:var(--seine)">
+    <span class="dot" aria-hidden="true"></span>
+    <details>
+    <summary class="day-btn">
+      <span><span class="when">Dom, 25 out</span><h3>Louvre</h3><span class="base">Paris</span></span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+    </summary>
+    <div class="day-body">
+      <span class="flag info">Relógios atrasam 1 h nesta madrugada</span>
+      <ul class="tl"><li><span class="h">9h</span><span>Louvre com horário reservado (3 ou 4 alas)</span></li><li><span class="h">13h</span><span>Almoço</span></li><li><span class="h">14h30</span><span>Jardim das Tuileries</span></li><li><span class="h">15h30</span><span>Orsay, opcional</span></li><li><span class="h">Noite</span><span>Jantar em Saint-Germain</span></li></ul>
+      <p class="cost">Custo do dia para os dois: €64 de Louvre (+€32 Orsay) + cerca de €100</p>
+      <label class="note-label" for="n-d25">Anotações do dia</label>
+      <textarea class="note" id="n-d25" data-day="d25" placeholder="Restaurante que alguém indicou, horário de um show, o que levar..."></textarea>
+    </div>
+    </details>
+   </li>
+   <li class="stop" style="--c:var(--seine)">
+    <span class="dot" aria-hidden="true"></span>
+    <details>
+    <summary class="day-btn">
+      <span><span class="when">Seg, 26 out</span><h3>Montmartre e jantar especial</h3><span class="base">Paris</span></span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+    </summary>
+    <div class="day-body">
+      <span class="flag info">Comprar os Navigo da nova semana</span><span class="flag rose">Jantar especial</span>
+      <ul class="tl"><li><span class="h">10h</span><span>Sacré-Cœur e Place du Tertre</span></li><li><span class="h">13h</span><span>Almoço em Montmartre</span></li><li><span class="h">15h</span><span>Galeries Lafayette (terraço) e Ópera</span></li><li><span class="h">18h</span><span>Descanso</span></li><li><span class="h">20h</span><span>Jantar especial da lua de mel</span></li></ul>
+      <p class="cost">Custo do dia para os dois: cerca de €160</p>
+      <label class="note-label" for="n-d26">Anotações do dia</label>
+      <textarea class="note" id="n-d26" data-day="d26" placeholder="Restaurante que alguém indicou, horário de um show, o que levar..."></textarea>
+    </div>
+    </details>
+   </li>
+   <li class="stop" style="--c:var(--seine)">
+    <span class="dot" aria-hidden="true"></span>
+    <details>
+    <summary class="day-btn">
+      <span><span class="when">Ter, 27 out</span><h3>Versalhes</h3><span class="base">Paris</span></span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+    </summary>
+    <div class="day-body">
+      
+      <ul class="tl"><li><span class="h">8h30</span><span>RER C até Versailles Château Rive Gauche</span></li><li><span class="h">9h30</span><span>Palácio com horário reservado</span></li><li><span class="h">12h30</span><span>Piquenique nos jardins</span></li><li><span class="h">Tarde</span><span>Jardins e Trianon</span></li><li><span class="h">17h</span><span>Volta; jantar tranquilo no Marais</span></li></ul>
+      <p class="cost">Custo do dia para os dois: €70 de ingressos + cerca de €90</p>
+      <label class="note-label" for="n-d27">Anotações do dia</label>
+      <textarea class="note" id="n-d27" data-day="d27" placeholder="Restaurante que alguém indicou, horário de um show, o que levar..."></textarea>
+    </div>
+    </details>
+   </li>
+   <li class="stop" style="--c:var(--seine)">
+    <span class="dot" aria-hidden="true"></span>
+    <details>
+    <summary class="day-btn">
+      <span><span class="when">Qua, 28 out</span><h3>Île de la Cité e Sena</h3><span class="base">Paris</span></span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+    </summary>
+    <div class="day-body">
+      <span class="flag pend">Último dia inteiro: arrumar malas à noite</span>
+      <ul class="tl"><li><span class="h">10h</span><span>Notre-Dame (gratuita) e Sainte-Chapelle, opcional</span></li><li><span class="h">13h</span><span>Almoço</span></li><li><span class="h">14h30</span><span>Museu Picasso ou compras no Marais</span></li><li><span class="h">17h30</span><span>Cruzeiro no Sena no pôr do sol</span></li><li><span class="h">20h</span><span>Jantar de despedida</span></li></ul>
+      <p class="cost">Custo do dia para os dois: €40 de cruzeiro + cerca de €100</p>
+      <label class="note-label" for="n-d28">Anotações do dia</label>
+      <textarea class="note" id="n-d28" data-day="d28" placeholder="Restaurante que alguém indicou, horário de um show, o que levar..."></textarea>
+    </div>
+    </details>
+   </li>
+   <li class="stop" style="--c:var(--grey)">
+    <span class="dot" aria-hidden="true"></span>
+    <details>
+    <summary class="day-btn">
+      <span><span class="when">Qui, 29 out</span><h3>Volta</h3><span class="base">Paris → São Paulo</span></span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+    </summary>
+    <div class="day-body">
+      
+      <ul class="tl"><li><span class="h">7h</span><span>Café</span></li><li><span class="h">7h45</span><span>Check-out do Airbnb</span></li><li><span class="h">8h</span><span>RER B em Châtelet até CDG (cerca de 50 min)</span></li><li><span class="h">9h</span><span>Check-in e despacho</span></li><li><span class="h">12h05</span><span>Voo LATAM de volta</span></li><li><span class="h">19h55</span><span>Chegada em Guarulhos</span></li></ul>
+      <p class="cost">Custo do dia para os dois: cerca de €20</p>
+      <label class="note-label" for="n-d29">Anotações do dia</label>
+      <textarea class="note" id="n-d29" data-day="d29" placeholder="Restaurante que alguém indicou, horário de um show, o que levar..."></textarea>
+    </div>
+    </details>
+   </li></ol>
+    <p class="sync" id="sync-note"></p>
+  </section>
+
+  <!-- RESERVAS -->
+  <section class="panel" id="reservas" role="tabpanel" aria-labelledby="t-reservas">
+    <h2>Reservas confirmadas</h2>
+    <p class="lead">Voos e hospedagens já pagos. Os horários são locais de cada cidade.</p>
+    <div id="bookings">
+   <div class="booking">
+    <div class="kind">Voo de ida</div><h3>LATAM</h3>
+    <div class="route"><span>GRU<small>19 out, 18h00</small></span><span class="arrow" aria-hidden="true"></span><span>CDG<small>20 out, 10h15</small></span></div>
+    <dl><dt>Valor</dt><dd>R$ 3.875,23</dd></dl>
+    
+   </div>
+   <div class="booking">
+    <div class="kind">Hospedagem 1</div><h3>Airbnb em Montévrain</h3>
+    
+    <dl><dt>Região</dt><dd>Montévrain, perto de Val d'Europe</dd><dt>Datas</dt><dd>20 → 23 out, 3 noites</dd><dt>Valor</dt><dd>R$ 1.835,27</dd></dl>
+    <div class="btns">
+      <a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=Mont%C3%A9vrain%2C%20France">Abrir no mapa</a>
+    </div>
+   </div>
+   <div class="booking">
+    <div class="kind">Hospedagem 2</div><h3>Airbnb no Marais</h3>
+    
+    <dl><dt>Região</dt><dd>Le Marais, Paris</dd><dt>Datas</dt><dd>23 → 29 out, 6 noites</dd><dt>Valor</dt><dd>R$ 4.329,33</dd></dl>
+    <div class="btns">
+      <a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=Le%20Marais%2C%20Paris">Abrir no mapa</a>
+    </div>
+   </div>
+   <div class="booking">
+    <div class="kind">Voo de volta</div><h3>LATAM</h3>
+    <div class="route"><span>CDG<small>29 out, 12h05</small></span><span class="arrow" aria-hidden="true"></span><span>GRU<small>29 out, 19h55</small></span></div>
+    <dl><dt>Atenção</dt><dd>Sair do Marais até 8h</dd></dl>
+    
+   </div></div>
+  </section>
+
+  <!-- A FAZER -->
+  <section class="panel" id="afazer" role="tabpanel" aria-labelledby="t-afazer">
+    <h2>O que falta reservar</h2>
+    <p class="lead">Tudo que tem horário marcado deve ser reservado já: fim de outubro coincide com as férias escolares francesas.</p>
+    <div class="progress" aria-hidden="true"><b id="prog-bar" style="width: 0%;"></b></div>
+    <p class="sync" id="prog-text">0 de 17 feitos</p>
+    <div id="checklist">
+   <div class="group"><h3>Esta semana (até 5 out)</h3>
+    <label class="check"><input type="checkbox" data-id="disney"><span>Ingressos Disney datados para 21 e 22 out</span></label><label class="check"><input type="checkbox" data-id="eiffel"><span>Torre Eiffel, 2º andar por elevador, 24 out de manhã (site oficial)</span></label><label class="check"><input type="checkbox" data-id="louvre"><span>Louvre, 25 out às 9h</span></label><label class="check"><input type="checkbox" data-id="versalhes"><span>Versalhes, 27 out às 9h30</span></label><label class="check"><input type="checkbox" data-id="etias"><span>Conferir se o ETIAS já é exigido (europa.eu/etias)</span></label>
+   </div>
+   <div class="group"><h3>Até 10 out</h3>
+    <label class="check"><input type="checkbox" data-id="jantar"><span>Reservar o jantar especial de 26 out</span></label><label class="check"><input type="checkbox" data-id="seguro"><span>Seguro viagem com cobertura mínima de €30.000</span></label><label class="check"><input type="checkbox" data-id="anfitrioes"><span>Combinar check-in, check-out e malas com os anfitriões</span></label><label class="check"><input type="checkbox" data-id="decisao"><span>Decidir se a Disney fica com 1 ou 2 dias</span></label>
+   </div>
+   <div class="group"><h3>Até a véspera</h3>
+    <label class="check"><input type="checkbox" data-id="cruzeiro"><span>Cruzeiro no Sena de 28 out</span></label><label class="check"><input type="checkbox" data-id="opcionais"><span>Orsay, Picasso ou Sainte-Chapelle, se forem fazer</span></label><label class="check"><input type="checkbox" data-id="foto"><span>Fotos 3 × 2,5 cm para os cartões Navigo</span></label><label class="check"><input type="checkbox" data-id="banco"><span>Avisar o banco e levar 2 cartões</span></label><label class="check"><input type="checkbox" data-id="checkin-ida"><span>Check-in online do voo de ida (18 out)</span></label>
+   </div>
+   <div class="group"><h3>Durante a viagem</h3>
+    <label class="check"><input type="checkbox" data-id="navigo1"><span>Comprar Navigo Semaine no CDG (20 out)</span></label><label class="check"><input type="checkbox" data-id="checkin-volta"><span>Check-in online do voo de volta (28 out)</span></label><label class="check"><input type="checkbox" data-id="navigo2"><span>Comprar Navigo Semaine da nova semana (26 out)</span></label>
+   </div></div>
+  </section>
+
+  <!-- ORÇAMENTO -->
+  <section class="panel" id="orcamento" role="tabpanel" aria-labelledby="t-orcamento">
+    <h2>Orçamento do casal</h2>
+    <p class="lead">O que já foi pago, o que está previsto em solo e o que vocês gastarem de verdade durante a viagem.</p>
+    <div class="totals" id="totals">
+    <div class="tot"><span>Teto</span><strong>R$&nbsp;15.000,00</strong></div>
+    <div class="tot"><span>Já pago</span><strong>R$&nbsp;10.039,83</strong></div>
+    <div class="tot"><span>Previsto em solo</span><strong>R$&nbsp;12.870,00</strong></div>
+    <div class="tot"><span>Gasto na viagem</span><strong>R$&nbsp;0,00</strong></div></div>
+    <div class="stack" id="stack" role="img" aria-label="Pago, previsto e teto"><b style="width:43.82324094067917%;background:var(--ink)"></b><b style="width:56.17675905932082%;background:var(--seine)"></b></div>
+    <div class="stack-legend" id="stack-legend"><span><i style="background:var(--ink)"></i>Pago</span><span><i style="background:var(--seine)"></i>Previsto em solo</span><span>Total previsto: R$&nbsp;22.909,83</span></div>
+    <div id="budget-warn"><p class="warn">O total previsto passa o teto em R$&nbsp;7.909,83. Os cortes que mais pesam: Disney em 1 dia (cerca de €250), café e jantar no Airbnb em 4 dias (cerca de €200) e compras de €150 para €50.</p></div>
+
+    <h3 style="margin:26px 0 6px;font-size:1.2rem">Previsto em solo</h3>
+    <div class="field"><label for="rate">Câmbio usado (R$ por €)</label><input id="rate" type="number" step="0.01" min="1" inputmode="decimal"></div>
+    <div class="table-wrap"><table id="plan">
+    <thead><tr><th>Item</th><th class="num">Previsto</th><th class="num">Em R$</th><th class="num">Gasto</th></tr></thead>
+    <tbody><tr><td>Ingressos Disney<br><small style="color:var(--muted)">2 dias, 2 parques</small></td><td class="num">€&nbsp;400,00</td><td class="num">R$&nbsp;2.600,00</td><td class="num">—</td></tr><tr><td>Comida na Disney<br><small style="color:var(--muted)">2 dias</small></td><td class="num">€&nbsp;180,00</td><td class="num">R$&nbsp;1.170,00</td><td class="num">—</td></tr><tr><td>Atrações em Paris<br><small style="color:var(--muted)">Torre, Louvre, Versalhes, cruzeiro</small></td><td class="num">€&nbsp;220,00</td><td class="num">R$&nbsp;1.430,00</td><td class="num">—</td></tr><tr><td>Comida fora da Disney<br><small style="color:var(--muted)">cerca de €100 por dia</small></td><td class="num">€&nbsp;740,00</td><td class="num">R$&nbsp;4.810,00</td><td class="num">—</td></tr><tr><td>Transporte<br><small style="color:var(--muted)">2 Navigo por pessoa</small></td><td class="num">€&nbsp;140,00</td><td class="num">R$&nbsp;910,00</td><td class="num">—</td></tr><tr><td>Compras e souvenirs<br><small style="color:var(--muted)">teto</small></td><td class="num">€&nbsp;150,00</td><td class="num">R$&nbsp;975,00</td><td class="num">—</td></tr><tr><td>Imprevistos<br><small style="color:var(--muted)">reserva</small></td><td class="num">€&nbsp;150,00</td><td class="num">R$&nbsp;975,00</td><td class="num">—</td></tr></tbody>
+    <tfoot><tr><td>Total</td><td class="num">€&nbsp;1.980,00</td><td class="num">R$&nbsp;12.870,00</td><td class="num">R$&nbsp;0,00</td></tr></tfoot></table></div>
+
+    <h3 style="margin:26px 0 6px;font-size:1.2rem">Gastos da viagem</h3>
+    <form class="add" id="add-form">
+      <input class="full" id="g-desc" placeholder="O que foi (ex.: jantar em Montmartre)" required="" aria-label="Descrição do gasto">
+      <input id="g-val" type="number" step="0.01" min="0" placeholder="Valor" required="" inputmode="decimal" aria-label="Valor">
+      <select id="g-cur" aria-label="Moeda"><option value="EUR">€</option><option value="BRL">R$</option></select>
+      <select id="g-cat" aria-label="Categoria"><option value="disney">Ingressos Disney</option><option value="disneyfood">Comida na Disney</option><option value="atracoes">Atrações em Paris</option><option value="comida">Comida fora da Disney</option><option value="transporte">Transporte</option><option value="compras">Compras e souvenirs</option><option value="imprevistos">Imprevistos</option></select>
+      <button class="btn primary" type="submit">Adicionar gasto</button>
+    </form>
+    <div class="table-wrap"><table id="spent"><tbody><tr><td class="empty">Nenhum gasto ainda. Registrem cada gasto durante a viagem para comparar com o previsto.</td></tr></tbody></table></div>
+  </section>
+
+  <!-- GUIA -->
+  <section class="panel guide" id="guia" role="tabpanel" aria-labelledby="t-guia">
+    <h2>Guia rápido</h2>
+    <h3>Converter valores</h3>
+    <div class="conv">
+      <label for="conv-in">€</label><input id="conv-in" type="number" step="0.01" min="0" value="10" inputmode="decimal">
+      <span>=</span><output id="conv-out" for="conv-in">R$&nbsp;65,00 (a R$ 6,5)</output>
+    </div>
+    <h3>Transporte</h3>
+    <p>Navigo Semaine: €32,40 por pessoa, vale de segunda a domingo em toda a região, incluindo aeroportos, Disney e Versalhes. Comprem um no CDG no dia 20 (semana de 19 out) e outro no dia 26 (semana de 26 out). O cartão custa €5 e pede uma foto 3 × 2,5 cm.</p>
+    <p>Sem o passe: metrô/RER €2,55 por viagem e trajeto do aeroporto €14.</p>
+    <h3>Horário de verão</h3>
+    <p>Os relógios da França atrasam 1 hora na madrugada de 25 out. Depois disso o sol se põe por volta das 17h30.</p>
+    <h3>Documentos</h3>
+    <p>Passaporte válido por pelo menos 3 meses após a volta. A imigração em CDG tem cadastro biométrico, então a fila pode demorar. Conferir em europa.eu/etias se o ETIAS já está sendo exigido. Seguro viagem com cobertura mínima de €30.000.</p>
+    <h3>Dias de fechamento</h3>
+    <p>Louvre fecha às terças; Orsay e Versalhes, às segundas. O roteiro já está montado em volta disso.</p>
+    <h3>Clima</h3>
+    <p>Entre 8 e 15 °C, com chuva frequente: casaco, guarda-chuva e sapato confortável.</p>
+    <h3>Apps</h3>
+    <p>Disneyland Paris (horários e filas), Île-de-France Mobilités (bilhetes), Citymapper (rotas), LATAM (check-in) e mapa offline de Paris.</p>
+  </section>
+</div>
+
+<script>
+document.documentElement.classList.remove("no-js");
+/* ---------- Dados ---------- */
+const DAYS = [
+ {id:"d19",date:"2026-10-19",when:"Seg, 19 out",title:"Partida",base:"São Paulo",phase:"travel",
+  items:[["15h","Chegar em Guarulhos (3 h antes)"],["18h","Voo LATAM para Paris"]]},
+ {id:"d20",date:"2026-10-20",when:"Ter, 20 out",title:"Chegada e descanso",base:"Montévrain",phase:"travel",
+  flags:[["info","Comprar os 2 Navigo Semaine no CDG"]],
+  items:[["10h15","Pouso em CDG"],["10h45","Imigração (cadastro biométrico) e malas"],["12h","RER B + RER A até Val d'Europe (cerca de 1h30) ou TGV até Marne-la-Vallée–Chessy"],["14h","Check-in no Airbnb e descanso"],["16h","Supermercado; Val d'Europe se houver energia"],["19h","Jantar cedo e dormir (jet lag)"]],cost:"cerca de €60"},
+ {id:"d21",date:"2026-10-21",when:"Qua, 21 out",title:"Disneyland Park",base:"Montévrain",phase:"disney",
+  items:[["9h","Nos portões antes da abertura (confirmar no app)"],["Manhã","Peter Pan's Flight, Big Thunder Mountain, Star Wars Hyperspace Mountain"],["12h","Almoço"],["Tarde","Pirates of the Caribbean, Phantom Manor, Indiana Jones, It's a Small World, desfile"],["Noite","Show no castelo e volta"]],cost:"ingressos + cerca de €90 de comida"},
+ {id:"d22",date:"2026-10-22",when:"Qui, 22 out",title:"Disney Adventure World",base:"Montévrain",phase:"disney",
+  flags:[["pend","Decidir: 2º dia na Disney ou dia livre"]],
+  items:[["9h","Direto para World of Frozen (Frozen Ever After)"],["Manhã","Avengers Campus, Ratatouille, Crush's Coaster, Tower of Terror"],["12h","Almoço"],["Tarde","Voltar ao Disneyland Park para repetir favoritos"],["Noite","Show noturno (horário no app)"]],cost:"ingressos + cerca de €90 de comida"},
+ {id:"d23",date:"2026-10-23",when:"Sex, 23 out",title:"Mudança para o Marais",base:"Paris",phase:"paris",
+  items:[["10h","Check-out em Montévrain"],["11h","RER A até Châtelet–Les Halles, depois metrô"],["12h30","Almoço no Marché des Enfants Rouges"],["15h","Check-in no Airbnb e descanso"],["17h","Place des Vosges e Rue des Rosiers a pé"],["20h","Jantar romântico no Marais"]],cost:"cerca de €100"},
+ {id:"d24",date:"2026-10-24",when:"Sáb, 24 out",title:"Torre Eiffel",base:"Paris",phase:"paris",
+  items:[["9h30","Trocadéro para as fotos"],["10h30","Torre Eiffel, 2º andar, horário reservado"],["13h","Almoço ou piquenique no Champ de Mars"],["Tarde","Invalides e Pont Alexandre III"],["Noite","Torre cintilando (5 min a cada hora cheia)"]],cost:"€47 de ingressos + cerca de €100"},
+ {id:"d25",date:"2026-10-25",when:"Dom, 25 out",title:"Louvre",base:"Paris",phase:"paris",
+  flags:[["info","Relógios atrasam 1 h nesta madrugada"]],
+  items:[["9h","Louvre com horário reservado (3 ou 4 alas)"],["13h","Almoço"],["14h30","Jardim das Tuileries"],["15h30","Orsay, opcional"],["Noite","Jantar em Saint-Germain"]],cost:"€64 de Louvre (+€32 Orsay) + cerca de €100"},
+ {id:"d26",date:"2026-10-26",when:"Seg, 26 out",title:"Montmartre e jantar especial",base:"Paris",phase:"paris",
+  flags:[["info","Comprar os Navigo da nova semana"],["rose","Jantar especial"]],
+  items:[["10h","Sacré-Cœur e Place du Tertre"],["13h","Almoço em Montmartre"],["15h","Galeries Lafayette (terraço) e Ópera"],["18h","Descanso"],["20h","Jantar especial da lua de mel"]],cost:"cerca de €160"},
+ {id:"d27",date:"2026-10-27",when:"Ter, 27 out",title:"Versalhes",base:"Paris",phase:"paris",
+  items:[["8h30","RER C até Versailles Château Rive Gauche"],["9h30","Palácio com horário reservado"],["12h30","Piquenique nos jardins"],["Tarde","Jardins e Trianon"],["17h","Volta; jantar tranquilo no Marais"]],cost:"€70 de ingressos + cerca de €90"},
+ {id:"d28",date:"2026-10-28",when:"Qua, 28 out",title:"Île de la Cité e Sena",base:"Paris",phase:"paris",
+  flags:[["pend","Último dia inteiro: arrumar malas à noite"]],
+  items:[["10h","Notre-Dame (gratuita) e Sainte-Chapelle, opcional"],["13h","Almoço"],["14h30","Museu Picasso ou compras no Marais"],["17h30","Cruzeiro no Sena no pôr do sol"],["20h","Jantar de despedida"]],cost:"€40 de cruzeiro + cerca de €100"},
+ {id:"d29",date:"2026-10-29",when:"Qui, 29 out",title:"Volta",base:"Paris → São Paulo",phase:"travel",
+  items:[["7h","Café"],["7h45","Check-out do Airbnb"],["8h","RER B em Châtelet até CDG (cerca de 50 min)"],["9h","Check-in e despacho"],["12h05","Voo LATAM de volta"],["19h55","Chegada em Guarulhos"]],cost:"cerca de €20"}
+];
+const PHASE_COLOR = {travel:"var(--grey)",disney:"var(--gold)",paris:"var(--seine)"};
+
+const BOOKINGS = [
+ {kind:"Voo de ida",title:"LATAM",from:["GRU","19 out, 18h00"],to:["CDG","20 out, 10h15"],
+  rows:[["Valor","R$ 3.875,23"]]},
+ {kind:"Hospedagem 1",title:"Airbnb em Montévrain",
+  rows:[["Região","Montévrain, perto de Val d'Europe"],["Datas","20 → 23 out, 3 noites"],["Valor","R$ 1.835,27"]],
+  map:"Montévrain, France"},
+ {kind:"Hospedagem 2",title:"Airbnb no Marais",
+  rows:[["Região","Le Marais, Paris"],["Datas","23 → 29 out, 6 noites"],["Valor","R$ 4.329,33"]],
+  map:"Le Marais, Paris"},
+ {kind:"Voo de volta",title:"LATAM",from:["CDG","29 out, 12h05"],to:["GRU","29 out, 19h55"],
+  rows:[["Atenção","Sair do Marais até 8h"]]}
+];
+
+const CHECK = [
+ {group:"Esta semana (até 5 out)",items:[
+  ["disney","Ingressos Disney datados para 21 e 22 out"],
+  ["eiffel","Torre Eiffel, 2º andar por elevador, 24 out de manhã (site oficial)"],
+  ["louvre","Louvre, 25 out às 9h"],
+  ["versalhes","Versalhes, 27 out às 9h30"],
+  ["etias","Conferir se o ETIAS já é exigido (europa.eu/etias)"]]},
+ {group:"Até 10 out",items:[
+  ["jantar","Reservar o jantar especial de 26 out"],
+  ["seguro","Seguro viagem com cobertura mínima de €30.000"],
+  ["anfitrioes","Combinar check-in, check-out e malas com os anfitriões"],
+  ["decisao","Decidir se a Disney fica com 1 ou 2 dias"]]},
+ {group:"Até a véspera",items:[
+  ["cruzeiro","Cruzeiro no Sena de 28 out"],
+  ["opcionais","Orsay, Picasso ou Sainte-Chapelle, se forem fazer"],
+  ["foto","Fotos 3 × 2,5 cm para os cartões Navigo"],
+  ["banco","Avisar o banco e levar 2 cartões"],
+  ["checkin-ida","Check-in online do voo de ida (18 out)"]]},
+ {group:"Durante a viagem",items:[
+  ["navigo1","Comprar Navigo Semaine no CDG (20 out)"],
+  ["checkin-volta","Check-in online do voo de volta (28 out)"],
+  ["navigo2","Comprar Navigo Semaine da nova semana (26 out)"]]}
+];
+
+const PAID = [["Passagens",3875.23],["Hospedagens",6164.60]];
+const PLAN = [
+ ["disney","Ingressos Disney","2 dias, 2 parques",400],
+ ["disneyfood","Comida na Disney","2 dias",180],
+ ["atracoes","Atrações em Paris","Torre, Louvre, Versalhes, cruzeiro",220],
+ ["comida","Comida fora da Disney","cerca de €100 por dia",740],
+ ["transporte","Transporte","2 Navigo por pessoa",140],
+ ["compras","Compras e souvenirs","teto",150],
+ ["imprevistos","Imprevistos","reserva",150]
+];
+const CEILING = 15000;
+const CATS = PLAN.map(p=>[p[0],p[1]]);
+
+/* ---------- Estado ---------- */
+const state = {checks:{}, notes:{}, rate:6.5, expenses:[]};
+let db=null, canWrite=true, localMode=false;
+const LS_KEY="ldm-paris-v1";
+
+const brl = v => v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const eur = v => v.toLocaleString("pt-BR",{style:"currency",currency:"EUR"});
+const esc = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function loadLocal(){try{const s=JSON.parse(localStorage.getItem(LS_KEY)||"null");if(s)Object.assign(state,s)}catch(e){}}
+function saveLocal(){try{localStorage.setItem(LS_KEY,JSON.stringify(state))}catch(e){}}
+
+/* ---------- Contagem ---------- */
+function renderCountdown(){
+  const dep=new Date("2026-10-19T18:00:00-03:00"), back=new Date("2026-10-29T19:55:00-03:00"), now=new Date();
+  const el=document.getElementById("countdown");
+  if(now<dep){const d=Math.ceil((dep-now)/864e5);el.innerHTML=`<strong>${d}</strong><span>${d===1?"dia":"dias"} para o embarque</span>`}
+  else if(now<back){el.innerHTML=`<strong>Bon voyage</strong><span>a viagem está acontecendo</span>`}
+  else{el.innerHTML=`<strong>Voltaram</strong><span>que lua de mel</span>`}
+}
+
+/* ---------- Roteiro ---------- */
+function renderDays(){
+  const today=new Date().toISOString().slice(0,10);
+  const ol=document.getElementById("line");
+  ol.innerHTML=DAYS.map(d=>`
+   <li class="stop${d.date===today?" today":""}" style="--c:${PHASE_COLOR[d.phase]}">
+    <span class="dot" aria-hidden="true"></span>
+    <details${d.date===today?" open":""}>
+    <summary class="day-btn">
+      <span><span class="when">${d.when}</span><h3>${esc(d.title)}</h3><span class="base">${esc(d.base)}</span></span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+    </summary>
+    <div class="day-body">
+      ${(d.flags||[]).map(f=>`<span class="flag ${f[0]}">${esc(f[1])}</span>`).join("")}
+      <ul class="tl">${d.items.map(i=>`<li><span class="h">${i[0]}</span><span>${esc(i[1])}</span></li>`).join("")}</ul>
+      ${d.cost?`<p class="cost">Custo do dia para os dois: ${esc(d.cost)}</p>`:""}
+      <label class="note-label" for="n-${d.id}">Anotações do dia</label>
+      <textarea class="note" id="n-${d.id}" data-day="${d.id}" placeholder="Restaurante que alguém indicou, horário de um show, o que levar..."></textarea>
+    </div>
+    </details>
+   </li>`).join("");
+  ol.querySelectorAll("textarea.note").forEach(t=>{
+    t.addEventListener("blur",()=>saveNote(t.dataset.day,t.value));
+  });
+  fillNotes();
+}
+function fillNotes(){
+  document.querySelectorAll("textarea.note").forEach(t=>{
+    if(document.activeElement!==t) t.value=state.notes[t.dataset.day]||"";
+    t.readOnly=!canWrite;
+  });
+}
+async function saveNote(day,text){
+  if((state.notes[day]||"")===text) return;
+  state.notes[day]=text;
+  if(db&&!localMode){try{await db.doc("notas/"+day).set({texto:text})}catch(e){handleWriteError(e)}}
+  else saveLocal();
+}
+
+/* ---------- Reservas ---------- */
+function renderBookings(){
+  document.getElementById("bookings").innerHTML=BOOKINGS.map(b=>`
+   <div class="booking">
+    <div class="kind">${b.kind}</div><h3>${b.title}</h3>
+    ${b.from?`<div class="route"><span>${b.from[0]}<small>${b.from[1]}</small></span><span class="arrow" aria-hidden="true"></span><span>${b.to[0]}<small>${b.to[1]}</small></span></div>`:""}
+    <dl>${b.rows.map(r=>`<dt>${r[0]}</dt><dd>${esc(r[1])}</dd>`).join("")}</dl>
+    ${b.tel||b.map?`<div class="btns">
+      ${b.map?`<a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.map)}">Abrir no mapa</a>`:""}
+      ${b.tel?`<a class="btn" href="tel:${b.tel}">${b.telLabel}</a>`:""}
+    </div>`:""}
+   </div>`).join("");
+}
+
+/* ---------- A fazer ---------- */
+function renderChecklist(){
+  const all=CHECK.flatMap(g=>g.items), done=all.filter(i=>state.checks[i[0]]).length;
+  document.getElementById("prog-bar").style.width=(done/all.length*100)+"%";
+  document.getElementById("prog-text").textContent=`${done} de ${all.length} feitos`;
+  document.getElementById("checklist").innerHTML=CHECK.map(g=>`
+   <div class="group"><h3>${g.group}</h3>
+    ${g.items.map(i=>`<label class="check${state.checks[i[0]]?" done":""}"><input type="checkbox" data-id="${i[0]}"${state.checks[i[0]]?" checked":""}${canWrite?"":" disabled"}><span>${esc(i[1])}</span></label>`).join("")}
+   </div>`).join("");
+  document.querySelectorAll("#checklist input").forEach(c=>c.addEventListener("change",()=>toggleCheck(c.dataset.id,c.checked)));
+}
+let checkWriting=false, checkDirty=false;
+async function toggleCheck(id,val){
+  state.checks[id]=val; renderChecklist();
+  if(!db||localMode){saveLocal();return}
+  if(checkWriting){checkDirty=true;return}
+  checkWriting=true;
+  do{checkDirty=false;try{await db.doc("estado/checklist").set({itens:{...state.checks}})}catch(e){handleWriteError(e);break}}while(checkDirty);
+  checkWriting=false;
+}
+
+/* ---------- Orçamento ---------- */
+function toBRL(e){return e.moeda==="BRL"?e.valor:e.valor*state.rate}
+function renderBudget(){
+  const r=state.rate;
+  document.getElementById("rate").value=r;
+  const paid=PAID.reduce((s,p)=>s+p[1],0);
+  const planE=PLAN.reduce((s,p)=>s+p[3],0), planB=planE*r;
+  const spentB=state.expenses.reduce((s,e)=>s+toBRL(e),0);
+  const total=paid+planB;
+  document.getElementById("totals").innerHTML=`
+    <div class="tot"><span>Teto</span><strong>${brl(CEILING)}</strong></div>
+    <div class="tot"><span>Já pago</span><strong>${brl(paid)}</strong></div>
+    <div class="tot"><span>Previsto em solo</span><strong>${brl(planB)}</strong></div>
+    <div class="tot"><span>Gasto na viagem</span><strong>${brl(spentB)}</strong></div>`;
+  const max=Math.max(total,CEILING,paid+spentB);
+  document.getElementById("stack").innerHTML=`<b style="width:${paid/max*100}%;background:var(--ink)"></b><b style="width:${planB/max*100}%;background:var(--seine)"></b>`;
+  document.getElementById("stack-legend").innerHTML=`<span><i style="background:var(--ink)"></i>Pago</span><span><i style="background:var(--seine)"></i>Previsto em solo</span><span>Total previsto: ${brl(total)}</span>`;
+  document.getElementById("budget-warn").innerHTML= total>CEILING
+    ? `<p class="warn">O total previsto passa o teto em ${brl(total-CEILING)}. Os cortes que mais pesam: Disney em 1 dia (cerca de €250), café e jantar no Airbnb em 4 dias (cerca de €200) e compras de €150 para €50.</p>` : "";
+
+  const byCat={}; state.expenses.forEach(e=>{byCat[e.cat]=(byCat[e.cat]||0)+toBRL(e)});
+  document.getElementById("plan").innerHTML=`
+    <thead><tr><th>Item</th><th class="num">Previsto</th><th class="num">Em R$</th><th class="num">Gasto</th></tr></thead>
+    <tbody>${PLAN.map(p=>`<tr><td>${p[1]}<br><small style="color:var(--muted)">${p[2]}</small></td><td class="num">${eur(p[3])}</td><td class="num">${brl(p[3]*r)}</td><td class="num">${byCat[p[0]]?brl(byCat[p[0]]):"—"}</td></tr>`).join("")}</tbody>
+    <tfoot><tr><td>Total</td><td class="num">${eur(planE)}</td><td class="num">${brl(planB)}</td><td class="num">${brl(spentB)}</td></tr></tfoot>`;
+
+  const list=[...state.expenses].sort((a,b)=>(b.criadoEm||0)-(a.criadoEm||0));
+  document.getElementById("spent").innerHTML= list.length
+    ? `<thead><tr><th>Gasto</th><th class="num">Valor</th><th class="num">Em R$</th><th><span class="sr" style="position:absolute;left:-9999px">Apagar</span></th></tr></thead>
+       <tbody>${list.map(e=>`<tr><td>${esc(e.desc)}<br><small style="color:var(--muted)">${esc((CATS.find(c=>c[0]===e.cat)||["","Outros"])[1])}</small></td><td class="num">${e.moeda==="BRL"?brl(e.valor):eur(e.valor)}</td><td class="num">${brl(toBRL(e))}</td><td>${canWrite?`<button class="x" data-del="${e.id}" aria-label="Apagar ${esc(e.desc)}">×</button>`:""}</td></tr>`).join("")}</tbody>`
+    : `<tbody><tr><td class="empty">Nenhum gasto ainda. Registrem cada gasto durante a viagem para comparar com o previsto.</td></tr></tbody>`;
+  document.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click",()=>deleteExpense(b.dataset.del)));
+  renderConv();
+}
+function fillCats(){document.getElementById("g-cat").innerHTML=CATS.map(c=>`<option value="${c[0]}">${c[1]}</option>`).join("")}
+async function addExpense(ev){
+  ev.preventDefault();
+  const desc=document.getElementById("g-desc").value.trim(), valor=parseFloat(document.getElementById("g-val").value);
+  if(!desc||!(valor>=0)) return;
+  const e={desc,valor,moeda:document.getElementById("g-cur").value,cat:document.getElementById("g-cat").value,criadoEm:Date.now()};
+  document.getElementById("add-form").reset();
+  if(db&&!localMode){try{await db.collection("gastos").add(e)}catch(err){handleWriteError(err)}}
+  else{e.id="l"+e.criadoEm;state.expenses.push(e);saveLocal();renderBudget()}
+}
+async function deleteExpense(id){
+  if(db&&!localMode){try{await db.doc("gastos/"+id).delete()}catch(e){handleWriteError(e)}}
+  else{state.expenses=state.expenses.filter(e=>e.id!==id);saveLocal();renderBudget()}
+}
+let rateTimer;
+function onRate(){
+  const v=parseFloat(document.getElementById("rate").value);
+  if(!(v>0)) return;
+  clearTimeout(rateTimer);
+  rateTimer=setTimeout(async()=>{
+    if(v===state.rate) return;
+    state.rate=v; renderBudget();
+    if(db&&!localMode){try{await db.doc("estado/config").set({cambio:v})}catch(e){handleWriteError(e)}} else saveLocal();
+  },600);
+}
+function renderConv(){
+  const v=parseFloat(document.getElementById("conv-in").value)||0;
+  document.getElementById("conv-out").textContent=`${brl(v*state.rate)} (a R$ ${state.rate.toLocaleString("pt-BR")})`;
+}
+
+/* ---------- Sincronização ---------- */
+function handleWriteError(e){
+  if(e&&e.code==="invalid_argument"){canWrite=false;fillNotes();renderChecklist();renderBudget();
+    setSync("Vocês podem ver tudo, mas só quem tem acesso de edição consegue alterar.")}
+  else setSync("Não foi possível salvar agora. Tente de novo em instantes.");
+}
+function setSync(t){document.getElementById("sync-note").textContent=t}
+
+async function connect(){
+  try{
+    db = await (window.claude && window.claude.use ? window.claude.use("db") : null);
+    const user = await (window.claude && window.claude.use ? window.claude.use("user") : null);
+    if(user){try{const c=await user.can("data.write");if(c===false)canWrite=false}catch(e){}}
+  }catch(e){db=null}
+  if(!db){localMode=true;loadLocal();refreshAll();setSync("Salvo só neste aparelho.");return}
+  setSync("Anotações, checklist e gastos ficam salvos para vocês dois.");
+  db.collection("notas").onSnapshot(s=>{s.docs.forEach(d=>{state.notes[d.id]=(d.data()||{}).texto||""});fillNotes()},()=>{});
+  db.doc("estado/checklist").onSnapshot(s=>{if(s.exists){state.checks={...((s.data()||{}).itens||{})};renderChecklist()}},()=>{});
+  db.doc("estado/config").onSnapshot(s=>{if(s.exists){const c=(s.data()||{}).cambio;if(c>0){state.rate=c;renderBudget()}}},()=>{});
+  db.collection("gastos").onSnapshot(s=>{state.expenses=s.docs.map(d=>({id:d.id,...d.data()}));renderBudget()},()=>{});
+  fillNotes();renderChecklist();renderBudget();
+}
+function refreshAll(){fillNotes();renderChecklist();renderBudget()}
+
+/* ---------- Abas ---------- */
+function setupTabs(){
+  const tabs=[...document.querySelectorAll('[role="tab"]')];
+  tabs.forEach((t,i)=>{
+    t.addEventListener("click",()=>select(t));
+    t.addEventListener("keydown",e=>{
+      if(e.key==="ArrowRight"||e.key==="ArrowLeft"){const n=tabs[(i+(e.key==="ArrowRight"?1:-1)+tabs.length)%tabs.length];n.focus();select(n)}
+    });
+  });
+  function select(t){
+    tabs.forEach(x=>{x.setAttribute("aria-selected",String(x===t));x.tabIndex=x===t?0:-1});
+    document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id===t.getAttribute("aria-controls")));
+    window.scrollTo({top:0});
+  }
+  tabs.forEach(x=>x.tabIndex=x.getAttribute("aria-selected")==="true"?0:-1);
+}
+
+/* ---------- Início ---------- */
+renderCountdown();renderDays();renderBookings();fillCats();renderChecklist();renderBudget();setupTabs();
+document.getElementById("add-form").addEventListener("submit",addExpense);
+document.getElementById("rate").addEventListener("input",onRate);
+document.getElementById("conv-in").addEventListener("input",renderConv);
+connect();
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){
+  window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+}
+</script>
+
+
+</body></html>
