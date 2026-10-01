@@ -1,6 +1,6 @@
 /* Estado do app, salvamento local, sincronização pelo Firebase e anexos (IndexedDB). */
-import {clone, normDay, uid} from "./utils.js";
-import {DEFAULT_DAYS, DEFAULT_BOOKINGS, DEFAULT_CHECKLIST, DEFAULT_BUDGET} from "./data.js";
+import {clone, normDay, uid} from "./utils.js?v=6";
+import {DEFAULT_DAYS, DEFAULT_BOOKINGS, DEFAULT_CHECKLIST, DEFAULT_BUDGET} from "./data.js?v=6";
 
 const LS_KEY = "ldm-paris-v1";
 const LS_SYNC = "ldm-sync";

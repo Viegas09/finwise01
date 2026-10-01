@@ -71,3 +71,7 @@ Arquivos estáticos, sem build:
 Testes: `node --test lua-de-mel/tests/*.test.mjs`
 
 Para testar localmente: `python3 -m http.server` na raiz do repositório e abrir `http://localhost:8000/lua-de-mel/`.
+
+### Publicar uma versão nova
+
+Ao mudar qualquer arquivo em `css/` ou `js/`, aumente o número `?v=` em `index.html`, nos `import` dos arquivos `js/` e em `sw.js` (junto com o nome do `CACHE`). Assim o celular carrega todos os arquivos novos juntos e não mistura versão nova com antiga.
