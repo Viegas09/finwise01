@@ -14,265 +14,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Young+Serif&amp;family=Figtree:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
-<style>
-:root{
-  --paper:#F3F4F9; --surface:#FFFFFF; --surface-2:#F8F9FC; --ink:#141B3A; --muted:#4A5275; --line:#D5DAE8;
-  --hero:#1B2447; --hero-ink:#FFFFFF; --hero-muted:#C9CEE6;
-  --seine:#1D6E65; --rose:#B03D62; --gold:#8F6C00; --grey:#6E7690;
-  --seine-soft:#DDEFEC; --rose-soft:#F7E3EA; --gold-soft:#F6EDCF; --grey-soft:#E7E9F0;
-  --shadow:0 1px 2px rgba(20,27,58,.06),0 4px 14px rgba(20,27,58,.06);
-  --radius:16px; --on-accent:#FFFFFF;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --paper:#0D1226; --surface:#161D3B; --surface-2:#1B2346; --ink:#F1F3FA; --muted:#B3B9D3; --line:#2E3864;
-    --hero:#161D3B; --hero-ink:#F1F3FA; --hero-muted:#B3B9D3;
-    --seine:#62CABC; --rose:#EE8DAC; --gold:#E6C25A; --grey:#98A0BC;
-    --seine-soft:#143536; --rose-soft:#3A1E31; --gold-soft:#3A3120; --grey-soft:#252D52;
-    --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25); --on-accent:#0D1226;
-  }
-}
-:root[data-theme="dark"]{
-  --paper:#0D1226; --surface:#161D3B; --surface-2:#1B2346; --ink:#F1F3FA; --muted:#B3B9D3; --line:#2E3864;
-  --hero:#161D3B; --hero-ink:#F1F3FA; --hero-muted:#B3B9D3;
-  --seine:#62CABC; --rose:#EE8DAC; --gold:#E6C25A; --grey:#98A0BC;
-  --seine-soft:#143536; --rose-soft:#3A1E31; --gold-soft:#3A3120; --grey-soft:#252D52;
-  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25); --on-accent:#0D1226;
-}
-*,*::before,*::after{box-sizing:border-box}
-html{scroll-padding-top:80px}
-body{margin:0;background:var(--paper);color:var(--ink);
-  font-family:Figtree,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:17px;line-height:1.5;
-  -webkit-text-size-adjust:100%}
-h1,h2,h3{font-family:"Young Serif",Georgia,"Times New Roman",serif;font-weight:400;margin:0;line-height:1.2}
-button,input,select,textarea{font:inherit;color:inherit}
-button{cursor:pointer}
-:focus-visible{outline:3px solid var(--seine);outline-offset:2px}
-a{color:var(--seine)}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-
-/* Cabeçalho */
-.hero{background:var(--hero);color:var(--hero-ink);padding:calc(env(safe-area-inset-top,0px) + 22px) 16px 22px}
-.hero .in{max-width:780px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.hero .eyebrow{font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--hero-muted)}
-.hero h1{font-size:2.2rem;margin-top:4px}
-.hero p{margin:4px 0 0;color:var(--hero-muted)}
-.countdown{flex:none;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:10px 12px;text-align:center;width:104px}
-.countdown strong{display:block;font-family:"Young Serif",Georgia,serif;font-size:2.2rem;line-height:1;color:#FFB4CB}
-.countdown span{display:block;font-size:.78rem;line-height:1.25;color:var(--hero-muted);margin-top:4px}
-.stats{max-width:780px;margin:16px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.stat{background:rgba(255,255,255,.08);border-radius:12px;padding:8px 12px}
-.stat span{display:block;font-size:.75rem;color:var(--hero-muted);font-weight:600}
-.stat b{font-size:1.05rem;font-variant-numeric:tabular-nums}
-
-/* Abas */
-nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);
-  border-top:1px solid var(--line);box-shadow:0 -4px 14px rgba(20,27,58,.06);padding-bottom:env(safe-area-inset-bottom,0px)}
-nav.tabs .inner{display:flex;max-width:780px;margin:0 auto}
-nav.tabs button{flex:1;background:none;border:0;padding:9px 2px 10px;font-size:.78rem;font-weight:700;
-  color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;position:relative}
-nav.tabs button svg{width:24px;height:24px}
-nav.tabs button[aria-selected="true"]{color:var(--seine)}
-nav.tabs button[aria-selected="true"]::before{content:"";position:absolute;top:0;left:25%;right:25%;height:3px;border-radius:0 0 3px 3px;background:var(--seine)}
-@media (min-width:760px){
-  nav.tabs{position:sticky;top:0;bottom:auto;border-top:0;border-bottom:1px solid var(--line);box-shadow:none}
-  nav.tabs button{flex-direction:row;justify-content:center;gap:8px;font-size:.95rem;padding:14px 4px}
-  nav.tabs button[aria-selected="true"]::before{top:auto;bottom:0;border-radius:3px 3px 0 0}
-}
-.wrap{max-width:780px;margin:0 auto;padding:20px 16px 120px}
-@media (min-width:760px){.wrap{padding-bottom:56px}}
-section.panel{display:none}
-section.panel.active{display:block}
-section.panel > h2{font-size:1.6rem}
-.lead{color:var(--muted);margin:6px 0 18px;max-width:62ch}
-.sync{font-size:.85rem;color:var(--muted);margin:10px 0 0;display:flex;align-items:center;gap:6px}
-.sync::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--seine);flex:none}
-
-/* Faixa de datas */
-.strip{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 12px;margin:0 -16px 8px;padding-left:16px;padding-right:16px;scroll-snap-type:x proximity;scrollbar-width:none}
-.strip::-webkit-scrollbar{display:none}
-.chip{flex:none;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;min-width:56px;padding:8px 6px 7px;border-radius:14px;
-  background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)}
-.chip small{font-size:.7rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:.04em}
-.chip b{font-size:1.2rem;line-height:1.2;font-variant-numeric:tabular-nums}
-.chip i{width:18px;height:4px;border-radius:2px;background:var(--c);margin-top:3px}
-.chip.today{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.chip.today small{color:inherit;opacity:.8}
-.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.85rem;color:var(--muted);margin-bottom:14px}
-.legend i{display:inline-block;width:14px;height:6px;border-radius:3px;margin-right:6px;vertical-align:middle}
-
-/* Cartões dos dias */
-.days{display:flex;flex-direction:column;gap:12px}
-.day{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--line);
-  border-left:6px solid var(--c);overflow:hidden}
-.day.today{outline:2px solid var(--c);outline-offset:2px}
-.day-head{width:100%;display:flex;align-items:center;gap:14px;padding:14px 14px 14px 12px;background:none;border:0;text-align:left}
-.date{flex:none;width:52px;text-align:center;border-radius:12px;background:var(--soft);padding:6px 0}
-.date b{display:block;font-size:1.45rem;line-height:1.1;font-variant-numeric:tabular-nums;color:var(--c)}
-.date small{display:block;font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.day-head .ttl{flex:1;min-width:0}
-.day-head .dtitle{display:block;font-family:"Young Serif",Georgia,serif;font-size:1.25rem;line-height:1.2}
-.day-head .meta{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:.88rem;color:var(--muted);margin-top:2px}
-.day-head .count{font-weight:600}
-.chev{flex:none;width:22px;height:22px;transition:transform .2s;color:var(--muted)}
-.day-head[aria-expanded="true"] .chev{transform:rotate(180deg)}
-.day-body{padding:0 16px 18px;border-top:1px solid var(--line)}
-.flags{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 4px}
-.flag{display:inline-block;font-size:.85rem;font-weight:700;padding:4px 10px;border-radius:99px}
-.flag.pend{background:var(--gold-soft);color:var(--gold)}
-.flag.info{background:var(--seine-soft);color:var(--seine)}
-.flag.rose{background:var(--rose-soft);color:var(--rose)}
-
-.tl-empty{color:var(--muted);margin:14px 0 0;font-style:italic}
-.day-tools{margin-top:14px}
-.acts{list-style:none;margin:12px 0 0;padding:0;position:relative}
-.acts::before{content:"";position:absolute;left:37px;top:14px;bottom:14px;width:2px;background:var(--line)}
-.act{position:relative}
-.act-row{display:grid;grid-template-columns:76px 1fr auto;gap:10px;align-items:start;padding:4px 0}
-.time{justify-self:start;min-width:76px;margin-top:8px;text-align:center;font-weight:800;font-size:.88rem;font-variant-numeric:tabular-nums;
-  background:var(--soft);color:var(--ink);border-radius:8px;padding:3px 6px;position:relative;z-index:1}
-.time.empty{color:var(--muted);font-weight:600}
-.act-main{min-width:0;text-align:left;background:none;border:1px solid transparent;border-radius:12px;padding:6px 8px;margin-left:-8px;display:flex;flex-direction:column;gap:3px}
-.act-main:hover{background:var(--surface-2)}
-.act.open .act-main{background:var(--surface-2);border-color:var(--line)}
-.act-meta{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:.8rem;font-weight:600;color:var(--seine)}
-.act-meta span{display:inline-flex;align-items:center;gap:4px}
-.act-meta svg{width:14px;height:14px}
-.act.done .txt{text-decoration:line-through;color:var(--muted)}
-.act.done .time{opacity:.55}
-.badge{align-self:flex-start;font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:var(--rose);color:var(--on-accent);border-radius:99px;padding:1px 8px}
-.act.next .time{background:var(--rose);color:var(--on-accent)}
-.tick{width:34px;height:34px;margin-top:4px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:transparent;display:flex;align-items:center;justify-content:center;padding:0}
-.tick svg{width:18px;height:18px}
-.tick[aria-pressed="true"]{background:var(--seine);border-color:var(--seine);color:var(--on-accent)}
-.act-detail{margin:4px 0 10px 86px}
-@media (max-width:480px){.act-detail{margin-left:0}}
-.detail,.iform{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
-.detail > div{margin-bottom:12px}
-.detail b{display:flex;align-items:center;gap:6px;font-size:.88rem}
-.detail b svg{width:16px;height:16px;flex:none;color:var(--seine)}
-.detail p{margin:4px 0 0}
-.detail .btns{margin-top:8px}
-.hint{color:var(--muted);font-size:.92rem;margin:0 0 8px}
-.mapbox{margin-top:10px;border-radius:12px;overflow:hidden;border:1px solid var(--line);aspect-ratio:4/3;max-height:320px;background:var(--line)}
-.mapbox iframe{width:100%;height:100%;border:0;display:block}
-.btn.sm{padding:6px 12px;font-size:.85rem}
-.btn.sm svg{width:16px;height:16px}
-.iform h4{font-size:.8rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:14px 0 6px}
-.iform textarea{width:100%;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:10px;resize:vertical}
-.iform .fl input,.iform .fl select{background:var(--surface)}
-.lrow{display:grid;grid-template-columns:1fr auto;grid-template-areas:"a del" "b b";gap:6px;padding:6px 0;border-bottom:1px solid var(--line)}
-.lrow input{min-width:0;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:9px}
-.lrow > :nth-child(1){grid-area:a}.lrow > :nth-child(2){grid-area:b}.lrow > :nth-child(3){grid-area:del}
-@media (min-width:600px){.lrow{grid-template-columns:180px 1fr auto;grid-template-areas:"a b del"}}
-
-.quick{display:grid;grid-template-columns:72px 1fr auto;gap:8px;margin:14px 0 4px;padding:10px;border:1.5px dashed var(--line);border-radius:12px;background:var(--surface-2)}
-.quick input{min-width:0;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:10px}
-.quick button{border:0;border-radius:10px;background:var(--seine);color:var(--on-accent);font-weight:700;padding:0 14px;display:flex;align-items:center;gap:4px}
-.quick button svg{width:18px;height:18px}
-@media (max-width:420px){.quick button span{display:none}.quick button{padding:0 12px}}
-
-.cost{display:flex;gap:8px;align-items:baseline;font-size:.95rem;margin:14px 0 0;padding:10px 12px;border-radius:10px;background:var(--surface-2)}
-.cost span{color:var(--muted);font-weight:600;flex:none}
-.note-label{font-size:.88rem;font-weight:700;color:var(--muted);display:block;margin:16px 0 6px}
-.note{width:100%;min-height:72px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);padding:10px 12px;resize:vertical}
-.day-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-
-/* Edição */
-.edit h4{font-size:.8rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px}
-.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.fgrid .wide{grid-column:1/-1}
-.fl label{display:block;font-size:.85rem;font-weight:700;color:var(--muted);margin-bottom:4px}
-.fl input,.fl select,.row input,.row select{width:100%;min-width:0;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);padding:10px}
-.row{display:grid;grid-template-columns:96px 1fr;grid-template-areas:"a tools" "b b";gap:6px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
-.row > :nth-child(1){grid-area:a}.row > :nth-child(2){grid-area:b}.row .tools{grid-area:tools;justify-self:end}
-.row.flagrow{grid-template-columns:140px 1fr}
-@media (min-width:600px){.row{grid-template-columns:90px 1fr auto;grid-template-areas:"a b tools"}.row.flagrow{grid-template-columns:130px 1fr auto}}
-.row .tools{display:flex;gap:2px}
-.ib{width:36px;height:40px;border:1px solid var(--line);border-radius:10px;background:var(--surface);display:inline-flex;align-items:center;justify-content:center;color:var(--muted)}
-.ib svg{width:18px;height:18px}
-.ib.del{color:var(--rose)}
-.ib:disabled{opacity:.35;cursor:default}
-.add-line{margin-top:10px}
-
-/* Botões */
-.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);
-  border-radius:99px;padding:8px 16px;text-decoration:none;color:var(--ink);font-weight:700;font-size:.92rem}
-.btn svg{width:18px;height:18px}
-.btn.primary{background:var(--seine);border-color:var(--seine);color:var(--on-accent)}
-.btn.ghost{background:none}
-.btn.danger{color:var(--rose)}
-.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-
-/* Cartões genéricos */
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:12px}
-
-/* Reservas */
-.booking .kind{font-size:.8rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--rose)}
-.booking h3{font-size:1.3rem;margin-top:2px}
-.booking dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;margin:12px 0 0}
-.booking dt{color:var(--muted);font-weight:600}
-.booking dd{margin:0}
-.route{display:flex;align-items:center;gap:12px;margin-top:10px;font-family:"Young Serif",Georgia,serif;font-size:1.6rem}
-.route small{display:block;font-family:Figtree,system-ui,sans-serif;font-size:.85rem;color:var(--muted)}
-.route .arrow{flex:1;height:2px;background:var(--line);min-width:30px;position:relative}
-.route .arrow::after{content:"";position:absolute;right:-1px;top:-4px;border:5px solid transparent;border-left:8px solid var(--line)}
-
-/* Checklist */
-.group h3{font-size:1.15rem;margin:0 0 6px}
-.check{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}
-.check:last-child{border-bottom:0}
-.check input{width:22px;height:22px;margin-top:1px;accent-color:var(--seine);flex:none}
-.check.done span{text-decoration:line-through;color:var(--muted)}
-.progress{height:10px;border-radius:5px;background:var(--line);overflow:hidden;margin:8px 0 4px}
-.progress b{display:block;height:100%;background:var(--seine);transition:width .3s}
-
-/* Orçamento */
-.totals{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
-@media (min-width:600px){.totals{grid-template-columns:repeat(4,1fr)}}
-.tot{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;box-shadow:var(--shadow)}
-.tot span{font-size:.85rem;color:var(--muted);font-weight:600}
-.tot strong{display:block;font-size:1.25rem;font-variant-numeric:tabular-nums}
-.stack{display:flex;height:14px;border-radius:7px;overflow:hidden;background:var(--line);margin:14px 0 6px}
-.stack b{height:100%}
-.stack-legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.85rem;color:var(--muted)}
-.stack-legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
-.warn{background:var(--rose-soft);color:var(--ink);border-left:4px solid var(--rose);padding:10px 14px;border-radius:8px;margin:14px 0}
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:.95rem}
-th,td{text-align:left;padding:9px 6px;border-bottom:1px solid var(--line);vertical-align:top}
-th{font-size:.85rem;color:var(--muted);font-weight:700}
-td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-tfoot td{font-weight:800;border-bottom:0}
-form.add{display:grid;grid-template-columns:1fr 110px 80px;gap:8px;margin:0 0 12px}
-form.add input,form.add select{border:1px solid var(--line);border-radius:10px;background:var(--surface-2);padding:10px;min-width:0}
-form.add .full{grid-column:1/-1}
-form.add button{grid-column:1/-1;justify-content:center}
-@media (min-width:600px){form.add{grid-template-columns:1fr 120px 80px 160px auto}form.add .full,form.add button{grid-column:auto}}
-.x{background:none;border:0;color:var(--rose);font-size:1.3rem;padding:0 6px}
-.empty{color:var(--muted);padding:12px 0}
-.field{display:flex;align-items:center;gap:8px;margin:0 0 10px}
-.field input{width:90px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);padding:8px}
-h3.sub{font-size:1.2rem;margin:26px 0 10px}
-
-/* Guia */
-.guide .card h3{font-size:1.15rem;margin:0 0 6px}
-.guide .card p{margin:0 0 6px;max-width:65ch}
-.guide .card p:last-child{margin-bottom:0}
-.conv{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.conv input{width:120px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);padding:10px}
-.conv output{font-weight:800;font-size:1.2rem}
-
-.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);opacity:0;
-  background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:99px;font-weight:600;font-size:.92rem;transition:.25s;pointer-events:none;z-index:30;max-width:calc(100% - 32px)}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-@media (min-width:760px){.toast{bottom:24px}}
-
-.no-js nav.tabs{display:none}
-.no-js section.panel{display:block}
-.nojs-note{background:var(--gold-soft);border-left:4px solid var(--gold);padding:12px 14px;border-radius:8px;margin:0 0 16px}
-@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
-</style>
+<link rel="stylesheet" href="css/app.css">
+<script type="module" src="js/app.js"></script>
 </head>
 <body>
 <header class="hero">
@@ -281,6 +24,7 @@ h3.sub{font-size:1.2rem;margin:26px 0 10px}
       <div class="eyebrow">Lua de mel · 19 a 29 de outubro</div>
       <h1>Paris</h1>
       <p>Vinicius e Marcela: Disney, depois o Marais.</p>
+      <button type="button" class="sync-badge local" id="sync-badge">Só neste celular</button>
     </div>
     <div class="countdown" id="countdown" aria-live="polite"><strong>–</strong><span>dias para o embarque</span></div>
   </div>
@@ -290,37 +34,44 @@ h3.sub{font-size:1.2rem;margin:26px 0 10px}
 <nav class="tabs" role="tablist" aria-label="Seções">
   <div class="inner">
     <button role="tab" id="t-roteiro" aria-controls="roteiro" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="6" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="12" r="2"/><path d="M6 7v10M8 5h4a4 4 0 0 1 4 4v1"/></svg>Roteiro</button>
+    <button role="tab" id="t-ideias" aria-controls="ideias" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-4.5-9-9.5C1.8 8 4 4.5 7.5 4.5c2 0 3.5 1 4.5 2.5 1-1.5 2.5-2.5 4.5-2.5C20 4.5 22.2 8 21 11.5 19 16.5 12 21 12 21z"/></svg>Ideias</button>
     <button role="tab" id="t-reservas" aria-controls="reservas" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9a2 2 0 0 0 0 4v5h18v-5a2 2 0 0 1 0-4V6H3z"/><path d="M14 6v12" stroke-dasharray="2 2"/></svg>Reservas</button>
     <button role="tab" id="t-afazer" aria-controls="afazer" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6l2 2 3-3M4 13l2 2 3-3M12 7h8M12 14h8M12 20h8"/></svg>A fazer</button>
-    <button role="tab" id="t-orcamento" aria-controls="orcamento" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M16 15h2"/></svg>Orçamento</button>
+    <button role="tab" id="t-orcamento" aria-controls="orcamento" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M16 15h2"/></svg>Gastos</button>
     <button role="tab" id="t-guia" aria-controls="guia" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>Guia</button>
   </div>
 </nav>
 
-<main class="wrap">
-  <noscript><p class="nojs-note">Para ver e editar o roteiro, abra este app no Chrome ou no Safari com JavaScript ativado.</p></noscript>
+<main class="wrap" id="main">
+  <noscript><p class="nojs-note">Para usar o app, abra no Chrome ou no Safari com JavaScript ativado.</p></noscript>
 
   <!-- ROTEIRO -->
   <section class="panel active" id="roteiro" role="tabpanel" aria-labelledby="t-roteiro">
     <h2>Dia a dia</h2>
-    <p class="lead">Toque num dia para abrir e numa atividade para ver o local, a rota e os links. Use o campo tracejado para acrescentar atividades; elas entram na ordem do horário.</p>
+    <p class="lead">Toque num dia para abrir e numa atividade para ver local, rota, links e ingressos. Use o campo tracejado para acrescentar atividades; elas entram na ordem do horário.</p>
     <div class="strip" id="strip" aria-label="Ir para o dia"></div>
     <div class="legend"><span><i style="background:var(--grey)"></i>Viagem</span><span><i style="background:var(--gold)"></i>Disney</span><span><i style="background:var(--seine)"></i>Paris</span></div>
     <div class="days" id="line"></div>
-    <p class="sync" id="sync-note"></p>
+  </section>
+
+  <!-- IDEIAS -->
+  <section class="panel" id="ideias" role="tabpanel" aria-labelledby="t-ideias">
+    <h2>Lista de desejos</h2>
+    <p class="lead">Lugares, restaurantes e passeios que alguém indicou. Quando sobrar tempo, coloquem no roteiro com um toque.</p>
+    <div id="wishes"></div>
   </section>
 
   <!-- RESERVAS -->
   <section class="panel" id="reservas" role="tabpanel" aria-labelledby="t-reservas">
-    <h2>Reservas confirmadas</h2>
-    <p class="lead">Voos e hospedagens já pagos. Os horários são locais de cada cidade.</p>
+    <h2>Reservas</h2>
+    <p class="lead">Voos, hospedagens, ingressos e restaurantes. Guardem o código e o ingresso de cada um para abrir sem internet.</p>
     <div id="bookings"></div>
   </section>
 
   <!-- A FAZER -->
   <section class="panel" id="afazer" role="tabpanel" aria-labelledby="t-afazer">
-    <h2>O que falta reservar</h2>
-    <p class="lead">Tudo que tem horário marcado deve ser reservado já: fim de outubro coincide com as férias escolares francesas.</p>
+    <div class="panel-head"><h2>O que falta fazer</h2><button type="button" class="btn sm" id="cl-edit">Editar lista</button></div>
+    <p class="lead">Fim de outubro coincide com as férias escolares francesas: reservem já o que tem horário marcado.</p>
     <div class="card">
       <div class="progress" aria-hidden="true"><b id="prog-bar"></b></div>
       <p class="sync" id="prog-text" style="margin:0"></p>
@@ -330,28 +81,32 @@ h3.sub{font-size:1.2rem;margin:26px 0 10px}
 
   <!-- ORÇAMENTO -->
   <section class="panel" id="orcamento" role="tabpanel" aria-labelledby="t-orcamento">
-    <h2>Orçamento do casal</h2>
+    <h2>Gastos e orçamento</h2>
     <p class="lead">O que já foi pago, o que está previsto em solo e o que vocês gastarem de verdade durante a viagem.</p>
     <div class="totals" id="totals"></div>
     <div class="stack" id="stack" role="img" aria-label="Pago, previsto e teto"></div>
     <div class="stack-legend" id="stack-legend"></div>
     <div id="budget-warn"></div>
 
-    <h3 class="sub">Gastos da viagem</h3>
+    <h3 class="sub">Registrar gasto</h3>
     <div class="card">
       <form class="add" id="add-form">
         <input class="full" id="g-desc" placeholder="O que foi (ex.: jantar em Montmartre)" required aria-label="Descrição do gasto">
-        <input id="g-val" type="number" step="0.01" min="0" placeholder="Valor" required inputmode="decimal" aria-label="Valor">
+        <input id="g-val" placeholder="Valor" required inputmode="decimal" aria-label="Valor">
         <select id="g-cur" aria-label="Moeda"><option value="EUR">€</option><option value="BRL">R$</option></select>
         <select id="g-cat" aria-label="Categoria"></select>
+        <select id="g-day" aria-label="Dia"></select>
         <button class="btn primary" type="submit">Adicionar gasto</button>
       </form>
       <div class="table-wrap"><table id="spent"></table></div>
     </div>
 
-    <h3 class="sub">Previsto em solo</h3>
+    <h3 class="sub">Gasto por dia</h3>
+    <div class="card" id="by-day"></div>
+
+    <div class="panel-head"><h3 class="sub">Previsto em solo</h3><button type="button" class="btn sm" id="budget-edit">Editar orçamento</button></div>
     <div class="card">
-      <div class="field"><label for="rate">Câmbio usado (R$ por €)</label><input id="rate" type="number" step="0.01" min="1" inputmode="decimal"></div>
+      <div class="field"><label for="rate">Câmbio usado (R$ por €)</label><input id="rate" inputmode="decimal"></div>
       <div class="table-wrap"><table id="plan"></table></div>
     </div>
   </section>
@@ -360,13 +115,15 @@ h3.sub{font-size:1.2rem;margin:26px 0 10px}
   <section class="panel guide" id="guia" role="tabpanel" aria-labelledby="t-guia">
     <h2>Guia rápido</h2>
     <p class="lead">O essencial para consultar na rua.</p>
+    <div class="card emergency"><h3>Emergência</h3><div id="emergency"></div></div>
     <div class="card">
       <h3>Converter valores</h3>
       <div class="conv">
-        <label for="conv-in">€</label><input id="conv-in" type="number" step="0.01" min="0" value="10" inputmode="decimal">
+        <label for="conv-in">€</label><input id="conv-in" value="10" inputmode="decimal">
         <span>=</span><output id="conv-out" for="conv-in"></output>
       </div>
     </div>
+    <div class="card"><h3>Frases úteis</h3><div class="table-wrap" id="phrases"></div></div>
     <div class="card"><h3>Transporte</h3>
       <p>Navigo Semaine: €32,40 por pessoa, vale de segunda a domingo em toda a região, incluindo aeroportos, Disney e Versalhes. Comprem um no CDG no dia 20 (semana de 19 out) e outro no dia 26 (semana de 26 out). O cartão custa €5 e pede uma foto 3 × 2,5 cm.</p>
       <p>Sem o passe: metrô/RER €2,55 por viagem e trajeto do aeroporto €14.</p></div>
@@ -377,683 +134,25 @@ h3.sub{font-size:1.2rem;margin:26px 0 10px}
     <div class="card"><h3>Dias de fechamento</h3>
       <p>Louvre fecha às terças; Orsay e Versalhes, às segundas. O roteiro já está montado em volta disso.</p></div>
     <div class="card"><h3>Clima</h3>
-      <p>Entre 8 e 15 °C, com chuva frequente: casaco, guarda-chuva e sapato confortável.</p></div>
+      <p>Entre 8 e 15 °C, com chuva frequente: casaco, guarda-chuva e sapato confortável. A previsão de cada dia aparece no roteiro cerca de 15 dias antes.</p></div>
     <div class="card"><h3>Apps</h3>
-      <p>Disneyland Paris (horários e filas), Île-de-France Mobilités (bilhetes), Citymapper (rotas), LATAM (check-in) e mapa offline de Paris.</p></div>
-    <div class="card" id="backup-card"><h3>Backup e compartilhar</h3>
-      <p>Cada celular guarda os próprios dados. Para passar o roteiro editado, as anotações, o checklist e os gastos para o outro celular, exporte aqui e importe o arquivo lá.</p>
+      <p>Disneyland Paris (horários e filas), Île-de-France Mobilités (bilhetes), Citymapper (rotas), LATAM (check-in) e mapa offline de Paris no Google Maps.</p></div>
+    <div class="card" id="sync-card"><h3>Sincronizar os dois celulares</h3><div id="sync-body"></div></div>
+    <div class="card"><h3>Backup</h3>
+      <p>Um arquivo com tudo, inclusive os anexos. Serve para guardar uma cópia ou passar os dados para outro celular sem sincronização.</p>
       <div class="btns">
-        <button class="btn primary" type="button" id="export-btn">Exportar backup</button>
+        <button class="btn" type="button" id="export-btn">Exportar backup</button>
         <label class="btn" for="import-file">Importar backup</label>
         <input class="sr" type="file" id="import-file" accept="application/json,.json">
       </div>
     </div>
   </section>
 </main>
+
+<dialog id="viewer" aria-labelledby="viewer-title">
+  <div class="viewer-head"><h3 id="viewer-title"></h3><form method="dialog"><button class="btn sm">Fechar</button></form></div>
+  <div id="viewer-body" class="viewer-body"></div>
+  <div class="btns"><a class="btn sm" id="viewer-dl">Baixar</a><button type="button" class="btn sm ghost danger" id="viewer-del">Excluir</button></div>
+</dialog>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-<script>
-document.documentElement.classList.remove("no-js");
-/* ---------- Dados originais ---------- */
-/* Cada atividade: [horário, texto, {p: lugar para o mapa, how: como chegar, links: [[nome, url]], obs}] */
-const DEFAULT_DAYS = [
- {id:"d19",date:"2026-10-19",title:"Partida",base:"São Paulo",phase:"travel",
-  items:[["15h","Chegar em Guarulhos (3 h antes)",{p:"Aeroporto Internacional de Guarulhos, Terminal 3",links:[["LATAM (check-in)","https://www.latamairlines.com/br/pt"]]}],
-   ["18h","Voo LATAM para Paris",{obs:"Voo noturno: levar travesseiro de pescoço e casaco na bagagem de mão."}]]},
- {id:"d20",date:"2026-10-20",title:"Chegada e descanso",base:"Montévrain",phase:"travel",
-  flags:[["info","Comprar os 2 Navigo Semaine no CDG"]],
-  items:[["10h15","Pouso em CDG",{p:"Aéroport Paris-Charles de Gaulle"}],
-   ["10h45","Imigração (cadastro biométrico) e malas"],
-   ["12h","Trem até Val d'Europe",{p:"Gare de Val d'Europe, Serris",how:"Opção 1: RER B até Châtelet–Les Halles e RER A (sentido Marne-la-Vallée–Chessy) até Val d'Europe, cerca de 1h30, coberto pelo Navigo.\nOpção 2: TGV do CDG até Marne-la-Vallée–Chessy (cerca de 10 min, bilhete à parte) e RER A uma estação de volta até Val d'Europe.",links:[["Île-de-France Mobilités","https://www.iledefrance-mobilites.fr"]]}],
-   ["14h","Check-in no Airbnb e descanso",{p:"Montévrain, France"}],
-   ["16h","Supermercado; Val d'Europe se houver energia",{p:"Val d'Europe, Serris",how:"Shopping ao lado da estação de RER Val d'Europe."}],
-   ["19h","Jantar cedo e dormir (jet lag)"]],cost:"cerca de €60"},
- {id:"d21",date:"2026-10-21",title:"Disneyland Park",base:"Montévrain",phase:"disney",
-  items:[["9h","Nos portões antes da abertura (confirmar no app)",{p:"Disneyland Park, Chessy",how:"RER A de Val d'Europe até Marne-la-Vallée–Chessy (1 estação). A entrada fica a poucos minutos a pé.",links:[["Disneyland Paris","https://www.disneylandparis.com"]]}],
-   ["Manhã","Peter Pan's Flight, Big Thunder Mountain, Star Wars Hyperspace Mountain"],
-   ["12h","Almoço"],
-   ["Tarde","Pirates of the Caribbean, Phantom Manor, Indiana Jones, It's a Small World, desfile"],
-   ["Noite","Show no castelo e volta",{how:"RER A de Marne-la-Vallée–Chessy até Val d'Europe."}]],cost:"ingressos + cerca de €90 de comida"},
- {id:"d22",date:"2026-10-22",title:"Disney Adventure World",base:"Montévrain",phase:"disney",
-  flags:[["pend","Decidir: 2º dia na Disney ou dia livre"]],
-  items:[["9h","Direto para World of Frozen (Frozen Ever After)",{p:"Disney Adventure World, Chessy",how:"RER A de Val d'Europe até Marne-la-Vallée–Chessy (1 estação).",links:[["Disneyland Paris","https://www.disneylandparis.com"]]}],
-   ["Manhã","Avengers Campus, Ratatouille, Crush's Coaster, Tower of Terror"],
-   ["12h","Almoço"],
-   ["Tarde","Voltar ao Disneyland Park para repetir favoritos"],
-   ["Noite","Show noturno (horário no app)"]],cost:"ingressos + cerca de €90 de comida"},
- {id:"d23",date:"2026-10-23",title:"Mudança para o Marais",base:"Paris",phase:"paris",
-  items:[["10h","Check-out em Montévrain"],
-   ["11h","RER A até Châtelet–Les Halles, depois metrô",{p:"Châtelet–Les Halles, Paris",how:"RER A de Val d'Europe até Châtelet–Les Halles (cerca de 40 min). De lá, metrô ou táxi até o Airbnb no Marais."}],
-   ["12h30","Almoço no Marché des Enfants Rouges",{p:"Marché des Enfants Rouges, 39 Rue de Bretagne, Paris",how:"Metrô 3 até Temple ou metrô 8 até Filles du Calvaire."}],
-   ["15h","Check-in no Airbnb e descanso",{p:"Le Marais, Paris"}],
-   ["17h","Place des Vosges e Rue des Rosiers a pé",{p:"Place des Vosges, Paris",how:"A pé pelo Marais."}],
-   ["20h","Jantar romântico no Marais"]],cost:"cerca de €100"},
- {id:"d24",date:"2026-10-24",title:"Torre Eiffel",base:"Paris",phase:"paris",
-  items:[["9h30","Trocadéro para as fotos",{p:"Place du Trocadéro, Paris",how:"Metrô 9 (ou 6) até Trocadéro."}],
-   ["10h30","Torre Eiffel, 2º andar, horário reservado",{p:"Tour Eiffel, Paris",how:"Atravessar a Pont d'Iéna a pé a partir do Trocadéro (10 min).",links:[["Site oficial","https://www.toureiffel.paris"]]}],
-   ["13h","Almoço ou piquenique no Champ de Mars",{p:"Champ de Mars, Paris"}],
-   ["Tarde","Invalides e Pont Alexandre III",{p:"Hôtel des Invalides, Paris",how:"A pé pela margem do Sena ou metrô 8 até Invalides."}],
-   ["Noite","Torre cintilando (5 min a cada hora cheia)",{p:"Place du Trocadéro, Paris"}]],cost:"€47 de ingressos + cerca de €100"},
- {id:"d25",date:"2026-10-25",title:"Louvre",base:"Paris",phase:"paris",
-  flags:[["info","Relógios atrasam 1 h nesta madrugada"]],
-  items:[["9h","Louvre com horário reservado (3 ou 4 alas)",{p:"Musée du Louvre, Paris",how:"Metrô 1 até Palais Royal–Musée du Louvre.",links:[["Site oficial","https://www.louvre.fr"]]}],
-   ["13h","Almoço"],
-   ["14h30","Jardim das Tuileries",{p:"Jardin des Tuileries, Paris",how:"Saindo do Louvre, a pé pelo Arc du Carrousel."}],
-   ["15h30","Orsay, opcional",{p:"Musée d'Orsay, Paris",how:"Atravessar a passarela Léopold-Sédar-Senghor a partir das Tuileries (5 min a pé).",links:[["Site oficial","https://www.musee-orsay.fr"]]}],
-   ["Noite","Jantar em Saint-Germain",{p:"Saint-Germain-des-Prés, Paris",how:"Metrô 4 até Saint-Germain-des-Prés, ou a pé a partir do Orsay."}]],cost:"€64 de Louvre (+€32 Orsay) + cerca de €100"},
- {id:"d26",date:"2026-10-26",title:"Montmartre e jantar especial",base:"Paris",phase:"paris",
-  flags:[["info","Comprar os Navigo da nova semana"],["rose","Jantar especial"]],
-  items:[["10h","Sacré-Cœur e Place du Tertre",{p:"Basilique du Sacré-Cœur, Paris",how:"Metrô 2 até Anvers e funicular de Montmartre (vale com o Navigo)."}],
-   ["13h","Almoço em Montmartre",{p:"Place du Tertre, Paris"}],
-   ["15h","Galeries Lafayette (terraço) e Ópera",{p:"Galeries Lafayette Haussmann, Paris",how:"Metrô 7 ou 9 até Chaussée d'Antin–La Fayette. O terraço é gratuito."}],
-   ["18h","Descanso"],
-   ["20h","Jantar especial da lua de mel",{obs:"Colocar aqui o nome e o endereço do restaurante quando reservar."}]],cost:"cerca de €160"},
- {id:"d27",date:"2026-10-27",title:"Versalhes",base:"Paris",phase:"paris",
-  items:[["8h30","RER C até Versailles Château Rive Gauche",{p:"Gare de Versailles Château Rive Gauche",how:"RER C (sentido Versailles Château Rive Gauche) até o fim da linha, cerca de 40 min. Coberto pelo Navigo."}],
-   ["9h30","Palácio com horário reservado",{p:"Château de Versailles",how:"10 min a pé da estação.",links:[["Site oficial","https://www.chateauversailles.fr"]]}],
-   ["12h30","Piquenique nos jardins",{p:"Jardins du Château de Versailles"}],
-   ["Tarde","Jardins e Trianon",{p:"Domaine de Trianon, Versailles"}],
-   ["17h","Volta; jantar tranquilo no Marais",{how:"RER C de volta até Paris e metrô até o Marais."}]],cost:"€70 de ingressos + cerca de €90"},
- {id:"d28",date:"2026-10-28",title:"Île de la Cité e Sena",base:"Paris",phase:"paris",
-  flags:[["pend","Último dia inteiro: arrumar malas à noite"]],
-  items:[["10h","Notre-Dame (gratuita) e Sainte-Chapelle, opcional",{p:"Cathédrale Notre-Dame de Paris",how:"Metrô 4 até Cité, ou RER B/C até Saint-Michel Notre-Dame.",links:[["Sainte-Chapelle","https://www.sainte-chapelle.fr"]]}],
-   ["13h","Almoço"],
-   ["14h30","Museu Picasso ou compras no Marais",{p:"Musée Picasso, Paris",how:"A pé pelo Marais, ou metrô 8 até Saint-Sébastien–Froissart.",links:[["Museu Picasso","https://www.museepicassoparis.fr"]]}],
-   ["17h30","Cruzeiro no Sena no pôr do sol",{obs:"Conferir na reserva de qual píer o barco sai e colocar o local aqui."}],
-   ["20h","Jantar de despedida"]],cost:"€40 de cruzeiro + cerca de €100"},
- {id:"d29",date:"2026-10-29",title:"Volta",base:"Paris → São Paulo",phase:"travel",
-  items:[["7h","Café"],["7h45","Check-out do Airbnb"],
-   ["8h","RER B em Châtelet até CDG (cerca de 50 min)",{p:"Aéroport Paris-Charles de Gaulle",how:"RER B de Châtelet–Les Halles até Aéroport CDG 2. O Navigo da semana cobre o trajeto."}],
-   ["9h","Check-in e despacho",{links:[["LATAM","https://www.latamairlines.com/br/pt"]]}],
-   ["12h05","Voo LATAM de volta"],["19h55","Chegada em Guarulhos"]],cost:"cerca de €20"}
-];
-const PHASES = {travel:["Viagem","var(--grey)","var(--grey-soft)"],disney:["Disney","var(--gold)","var(--gold-soft)"],paris:["Paris","var(--seine)","var(--seine-soft)"]};
-const FLAG_KINDS = {info:"Informação",pend:"Pendência",rose:"Especial"};
-const WEEK = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
-
-const BOOKINGS = [
- {kind:"Voo de ida",title:"LATAM",from:["GRU","19 out, 18h00"],to:["CDG","20 out, 10h15"],
-  rows:[["Valor","R$ 3.875,23"]]},
- {kind:"Hospedagem 1",title:"Airbnb em Montévrain",
-  rows:[["Região","Montévrain, perto de Val d'Europe"],["Datas","20 → 23 out, 3 noites"],["Valor","R$ 1.835,27"]],
-  map:"Montévrain, France"},
- {kind:"Hospedagem 2",title:"Airbnb no Marais",
-  rows:[["Região","Le Marais, Paris"],["Datas","23 → 29 out, 6 noites"],["Valor","R$ 4.329,33"]],
-  map:"Le Marais, Paris"},
- {kind:"Voo de volta",title:"LATAM",from:["CDG","29 out, 12h05"],to:["GRU","29 out, 19h55"],
-  rows:[["Atenção","Sair do Marais até 8h"]]}
-];
-
-const CHECK = [
- {group:"Esta semana (até 5 out)",items:[
-  ["disney","Ingressos Disney datados para 21 e 22 out"],
-  ["eiffel","Torre Eiffel, 2º andar por elevador, 24 out de manhã (site oficial)"],
-  ["louvre","Louvre, 25 out às 9h"],
-  ["versalhes","Versalhes, 27 out às 9h30"],
-  ["etias","Conferir se o ETIAS já é exigido (europa.eu/etias)"]]},
- {group:"Até 10 out",items:[
-  ["jantar","Reservar o jantar especial de 26 out"],
-  ["seguro","Seguro viagem com cobertura mínima de €30.000"],
-  ["anfitrioes","Combinar check-in, check-out e malas com os anfitriões"],
-  ["decisao","Decidir se a Disney fica com 1 ou 2 dias"]]},
- {group:"Até a véspera",items:[
-  ["cruzeiro","Cruzeiro no Sena de 28 out"],
-  ["opcionais","Orsay, Picasso ou Sainte-Chapelle, se forem fazer"],
-  ["foto","Fotos 3 × 2,5 cm para os cartões Navigo"],
-  ["banco","Avisar o banco e levar 2 cartões"],
-  ["checkin-ida","Check-in online do voo de ida (18 out)"]]},
- {group:"Durante a viagem",items:[
-  ["navigo1","Comprar Navigo Semaine no CDG (20 out)"],
-  ["checkin-volta","Check-in online do voo de volta (28 out)"],
-  ["navigo2","Comprar Navigo Semaine da nova semana (26 out)"]]}
-];
-
-const PAID = [["Passagens",3875.23],["Hospedagens",6164.60]];
-const PLAN = [
- ["disney","Ingressos Disney","2 dias, 2 parques",400],
- ["disneyfood","Comida na Disney","2 dias",180],
- ["atracoes","Atrações em Paris","Torre, Louvre, Versalhes, cruzeiro",220],
- ["comida","Comida fora da Disney","cerca de €100 por dia",740],
- ["transporte","Transporte","2 Navigo por pessoa",140],
- ["compras","Compras e souvenirs","teto",150],
- ["imprevistos","Imprevistos","reserva",150]
-];
-const CEILING = 15000;
-const CATS = PLAN.map(p=>[p[0],p[1]]);
-
-/* ---------- Estado ---------- */
-const state = {checks:{}, notes:{}, rate:6.5, expenses:[], days:null};
-let db=null, canWrite=true, localMode=false;
-const LS_KEY="ldm-paris-v1";
-const openDays=new Set(), editDays=new Set();
-
-const brl = v => v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
-const eur = v => v.toLocaleString("pt-BR",{style:"currency",currency:"EUR"});
-const esc = s => String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const clone = o => JSON.parse(JSON.stringify(o));
-const $ = id => document.getElementById(id);
-
-function loadLocal(){try{const s=JSON.parse(localStorage.getItem(LS_KEY)||"null");if(s)Object.assign(state,s)}catch(e){}}
-function saveLocal(){try{localStorage.setItem(LS_KEY,JSON.stringify(state))}catch(e){}}
-function toast(t){const el=$("toast");el.textContent=t;el.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove("show"),2200)}
-
-const I = {
-  up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>',
-  down:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>',
-  del:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/></svg>',
-  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
-  edit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>',
-  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>',
-  pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
-  route:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="3" width="14" height="13" rx="3"/><path d="M5 10h14M8 20l2-4M16 20l-2-4"/><circle cx="9" cy="13" r=".6" fill="currentColor"/><circle cx="15" cy="13" r=".6" fill="currentColor"/></svg>',
-  walk:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="13" cy="4.5" r="1.8"/><path d="M10 21l2-6 3 3v3M9 12l2-4 3 2 3 1M11 8l-1 5"/></svg>',
-  map:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/></svg>',
-  link:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>',
-  ext:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5H5V6h5"/></svg>',
-  note:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h14v12l-4 4H5z"/><path d="M9 9h6M9 13h4"/></svg>',
-  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>'
-};
-
-/* ---------- Roteiro: dados ---------- */
-const rid = () => Math.random().toString(36).slice(2,9);
-function normItem(i){
-  if(Array.isArray(i)){const x=i[2]||{};i={h:i[0]||"",t:i[1]||"",p:x.p||"",how:x.how||"",obs:x.obs||"",links:(x.links||[]).map(l=>({l:l[0],u:l[1]})),done:false}}
-  if(!i.id) i.id=rid();
-  if(!Array.isArray(i.links)) i.links=[];
-  return i;
-}
-function normDay(d){ d.items=(d.items||[]).map(normItem); d.flags=d.flags||[]; return d }
-function getDays(){ if(!state.days) state.days=clone(DEFAULT_DAYS); state.days.forEach(normDay); return state.days }
-function dayById(id){ return getDays().find(d=>d.id===id) }
-function itemById(d,iid){ return d.items.find(x=>x.id===iid) }
-function dateParts(iso){const d=new Date(iso+"T12:00:00");return {dd:d.getDate(),wd:WEEK[d.getDay()]}}
-function todayISO(){const n=new Date();return new Date(n.getTime()-n.getTimezoneOffset()*6e4).toISOString().slice(0,10)}
-
-/* Horários: "9h", "14h30", "14:30", "Manhã", "Tarde", "Noite" */
-function mins(h){
-  h=String(h||"").trim().toLowerCase();
-  const m=h.match(/^(\d{1,2})(?:\s*(?:h|:)\s*(\d{2})?)?/);
-  if(m&&+m[1]<24) return (+m[1])*60+(+(m[2]||0));
-  if(/^manh/.test(h)) return 9*60; if(/^tarde/.test(h)) return 14*60; if(/^noite/.test(h)) return 20*60;
-  return null;
-}
-function insertByTime(items,it){
-  const m=mins(it.h);
-  const k=m==null?-1:items.findIndex(x=>{const v=mins(x.h);return v!=null&&v>m});
-  k<0?items.push(it):items.splice(k,0,it);
-}
-function sortByTime(items){
-  let last=-1;
-  const keyed=items.map((it,i)=>{const m=mins(it.h);if(m!=null)last=m;return {it,i,k:last}});
-  keyed.sort((a,b)=>a.k-b.k||a.i-b.i);
-  return keyed.map(x=>x.it);
-}
-function nextItemId(d){
-  if(d.date!==todayISO()) return null;
-  const n=new Date(), now=n.getHours()*60+n.getMinutes();
-  const it=d.items.find(x=>!x.done&&mins(x.h)!=null&&mins(x.h)>=now);
-  return it?it.id:null;
-}
-
-/* Mapas e links */
-const gmap = q => "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q);
-const gdir = (q,mode) => "https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(q)+"&travelmode="+mode;
-const gembed = q => "https://www.google.com/maps?q="+encodeURIComponent(q)+"&output=embed";
-function dayRoute(d){
-  const ps=d.items.map(i=>i.p).filter(Boolean).filter((p,k,a)=>p!==a[k-1]);
-  if(!ps.length) return "";
-  return ps.length===1?gmap(ps[0]):"https://www.google.com/maps/dir/"+ps.map(encodeURIComponent).join("/")+"/";
-}
-function safeUrl(u){
-  u=String(u||"").trim(); if(!u) return "";
-  if(!/^[a-z][a-z0-9+.-]*:/i.test(u)) u="https://"+u.replace(/^\/+/,"");
-  try{const x=new URL(u);return /^https?:$/.test(x.protocol)?x.href:""}catch(e){return ""}
-}
-const hostOf = u => {try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return "Link"}};
-const rich = s => esc(s).replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>').replace(/\n/g,"<br>");
-
-let daysWriting=false, daysDirty=false;
-async function saveDays(){
-  updateStats();
-  if(!db||localMode){saveLocal();return}
-  if(daysWriting){daysDirty=true;return}
-  daysWriting=true;
-  do{daysDirty=false;try{await db.doc("estado/roteiro").set({dias:JSON.stringify(state.days)})}catch(e){handleWriteError(e);break}}while(daysDirty);
-  daysWriting=false;
-}
-
-/* ---------- Roteiro: render ---------- */
-const openItems=new Set(), mapItems=new Set();
-let editItem=null;
-
-function renderStrip(){
-  const t=todayISO();
-  $("strip").innerHTML=getDays().map(d=>{const p=dateParts(d.date);return `<button type="button" class="chip${d.date===t?" today":""}" data-go="${d.id}" style="--c:${PHASES[d.phase][1]}" aria-label="${p.wd} ${p.dd}: ${esc(d.title)}"><small>${p.wd}</small><b>${p.dd}</b><i></i></button>`}).join("");
-}
-function itemMeta(it){
-  const parts=[];
-  if(it.p) parts.push(`<span>${I.pin}${esc(it.p.split(",")[0])}</span>`);
-  if(it.how) parts.push(`<span>${I.route}Como chegar</span>`);
-  if(it.links.length) parts.push(`<span>${I.link}${it.links.length} ${it.links.length===1?"link":"links"}</span>`);
-  if(it.obs) parts.push(`<span>${I.note}Obs.</span>`);
-  return parts.length?`<span class="act-meta">${parts.join("")}</span>`:"";
-}
-function itemDetail(d,it){
-  const mapOpen=mapItems.has(it.id), empty=!it.p&&!it.how&&!it.links.length&&!it.obs;
-  return `<div class="detail">
-    ${it.how?`<div class="how"><b>${I.route}Como chegar</b><p>${rich(it.how)}</p></div>`:""}
-    ${it.p?`<div class="place"><b>${I.pin}${esc(it.p)}</b>
-      <div class="btns">
-        <a class="btn sm primary" target="_blank" rel="noopener" href="${gdir(it.p,"transit")}">${I.route}Rota de transporte</a>
-        <a class="btn sm" target="_blank" rel="noopener" href="${gdir(it.p,"walking")}">${I.walk}A pé</a>
-        <a class="btn sm" target="_blank" rel="noopener" href="${gmap(it.p)}">${I.pin}Abrir no Maps</a>
-        <button type="button" class="btn sm" data-act="map-item" data-day="${d.id}" data-item="${it.id}" aria-expanded="${mapOpen}">${I.map}${mapOpen?"Esconder mapa":"Ver mapa aqui"}</button>
-      </div>
-      ${mapOpen?`<div class="mapbox"><iframe loading="lazy" src="${gembed(it.p)}" title="Mapa: ${esc(it.p)}" referrerpolicy="no-referrer-when-downgrade"></iframe></div>`:""}
-    </div>`:""}
-    ${it.links.length?`<div class="links"><b>${I.link}Links</b><div class="btns">${it.links.map(l=>`<a class="btn sm" target="_blank" rel="noopener" href="${esc(l.u)}">${I.ext}${esc(l.l||hostOf(l.u))}</a>`).join("")}</div></div>`:""}
-    ${it.obs?`<div class="obs"><b>${I.note}Observações</b><p>${rich(it.obs)}</p></div>`:""}
-    ${empty?`<p class="hint">Acrescente o local (para rota e mapa), como chegar e links úteis, como ingressos e reservas.</p>`:""}
-    ${canWrite?`<div class="btns"><button type="button" class="btn sm" data-act="edit-item" data-day="${d.id}" data-item="${it.id}">${I.edit}${empty?"Adicionar detalhes":"Editar atividade"}</button></div>`:""}
-  </div>`;
-}
-function linkRow(l,u){
-  return `<div class="lrow"><input name="ll" value="${esc(l||"")}" placeholder="Nome (ex.: Ingressos)" aria-label="Nome do link"><input name="lu" value="${esc(u||"")}" placeholder="https://…" inputmode="url" autocapitalize="off" aria-label="Endereço do link"><button type="button" class="ib del" data-act="del-link-row" aria-label="Remover link">${I.del}</button></div>`;
-}
-function itemForm(d,it){
-  const k=d.id+"-"+it.id;
-  return `<form class="iform" data-item-form data-day="${d.id}" data-item="${it.id}">
-    <div class="fgrid">
-      <div class="fl"><label for="h-${k}">Horário</label><input id="h-${k}" name="h" value="${esc(it.h)}" placeholder="ex.: 14h30"></div>
-      <div class="fl"><label for="done-${k}">Situação</label><select id="done-${k}" name="done"><option value="0">A fazer</option><option value="1"${it.done?" selected":""}>Feito</option></select></div>
-      <div class="fl wide"><label for="t-${k}">Atividade</label><input id="t-${k}" name="t" value="${esc(it.t)}" required></div>
-      <div class="fl wide"><label for="p-${k}">Local para o mapa</label><input id="p-${k}" name="p" value="${esc(it.p)}" placeholder="Nome do lugar ou endereço (ex.: Musée du Louvre, Paris)"></div>
-      <div class="fl wide"><label for="how-${k}">Como chegar</label><textarea id="how-${k}" name="how" rows="3" placeholder="Linha de metrô, estação, trem, tempo de trajeto…">${esc(it.how)}</textarea></div>
-      <div class="fl wide"><label for="obs-${k}">Observações</label><textarea id="obs-${k}" name="obs" rows="2" placeholder="Código da reserva, o que levar, dica…">${esc(it.obs)}</textarea></div>
-    </div>
-    <h4>Links</h4>
-    <div class="lrows">${it.links.map(l=>linkRow(l.l,l.u)).join("")}</div>
-    <button type="button" class="btn sm add-line" data-act="add-link-row">${I.plus}Adicionar link</button>
-    <div class="day-actions">
-      <button type="submit" class="btn primary">${I.check}Salvar</button>
-      <button type="button" class="btn" data-act="cancel-item" data-day="${d.id}">Cancelar</button>
-      <button type="button" class="btn ghost danger" data-act="del-item" data-day="${d.id}" data-item="${it.id}">${I.del}Excluir</button>
-    </div>
-  </form>`;
-}
-function viewBody(d){
-  const route=dayRoute(d), nx=nextItemId(d);
-  const top=route?`<div class="btns day-tools"><a class="btn sm" target="_blank" rel="noopener" href="${route}">${I.map}Ver o dia no mapa</a></div>`:"";
-  const flags=d.flags.length?`<div class="flags">${d.flags.map(f=>`<span class="flag ${esc(f[0])}">${esc(f[1])}</span>`).join("")}</div>`:"";
-  const items=d.items.length
-    ? `<ul class="acts">${d.items.map(it=>{const open=openItems.has(it.id);return `<li class="act${it.done?" done":""}${it.id===nx?" next":""}${open?" open":""}">
-        <div class="act-row">
-          <span class="time${it.h?"":" empty"}">${esc(it.h||"—")}</span>
-          <button type="button" class="act-main" data-act="item" data-day="${d.id}" data-item="${it.id}" aria-expanded="${open}">
-            ${it.id===nx?`<span class="badge">Próximo</span>`:""}<span class="txt">${esc(it.t)}</span>${itemMeta(it)}
-          </button>
-          ${canWrite?`<button type="button" class="tick" data-act="done-item" data-day="${d.id}" data-item="${it.id}" aria-pressed="${!!it.done}" aria-label="${it.done?"Desmarcar":"Marcar como feito"}: ${esc(it.t)}">${I.check}</button>`:""}
-        </div>
-        ${open?`<div class="act-detail">${editItem===it.id&&canWrite?itemForm(d,it):itemDetail(d,it)}</div>`:""}
-      </li>`}).join("")}</ul>`
-    : `<p class="tl-empty">Nada planejado ainda.</p>`;
-  const quick=canWrite?`<form class="quick" data-quick="${d.id}">
-      <input name="h" placeholder="Hora" aria-label="Horário" autocomplete="off">
-      <input name="t" placeholder="Acrescentar atividade…" aria-label="Nova atividade" autocomplete="off" required>
-      <button type="submit" aria-label="Adicionar atividade">${I.plus}<span>Add</span></button>
-    </form>`:"";
-  return `${top}${flags}${items}${quick}
-    ${d.cost?`<p class="cost"><span>Custo do dia</span>${esc(d.cost)}</p>`:""}
-    <label class="note-label" for="n-${d.id}">Anotações do dia</label>
-    <textarea class="note" id="n-${d.id}" data-day="${d.id}" placeholder="Restaurante que alguém indicou, horário de um show, o que levar…"${canWrite?"":" readonly"}></textarea>
-    ${canWrite?`<div class="day-actions"><button type="button" class="btn" data-act="edit" data-day="${d.id}">${I.edit}Editar dia</button></div>`:""}`;
-}
-function editBody(d){
-  const n=d.items.length, fl=d.flags;
-  const hasDefault=DEFAULT_DAYS.some(x=>x.id===d.id);
-  return `<div class="edit">
-    <h4>Informações</h4>
-    <div class="fgrid">
-      <div class="fl wide"><label for="e-title-${d.id}">Título</label><input id="e-title-${d.id}" data-f="title" data-day="${d.id}" value="${esc(d.title)}"></div>
-      <div class="fl"><label for="e-base-${d.id}">Local</label><input id="e-base-${d.id}" data-f="base" data-day="${d.id}" value="${esc(d.base)}"></div>
-      <div class="fl"><label for="e-phase-${d.id}">Tipo</label><select id="e-phase-${d.id}" data-f="phase" data-day="${d.id}">${Object.entries(PHASES).map(([k,v])=>`<option value="${k}"${d.phase===k?" selected":""}>${v[0]}</option>`).join("")}</select></div>
-      <div class="fl wide"><label for="e-cost-${d.id}">Custo do dia</label><input id="e-cost-${d.id}" data-f="cost" data-day="${d.id}" value="${esc(d.cost||"")}" placeholder="ex.: cerca de €100"></div>
-    </div>
-    <h4>Atividades</h4>
-    <p class="hint" style="margin-top:0">Local, rota e links de cada atividade: toque nela fora do modo de edição.</p>
-    ${d.items.map((it,i)=>`<div class="row">
-      <input data-f="ih" data-day="${d.id}" data-i="${i}" value="${esc(it.h)}" placeholder="Hora" aria-label="Horário da atividade ${i+1}">
-      <input data-f="it" data-day="${d.id}" data-i="${i}" value="${esc(it.t)}" placeholder="Atividade" aria-label="Atividade ${i+1}">
-      <span class="tools">
-        <button type="button" class="ib" data-act="up" data-day="${d.id}" data-i="${i}" aria-label="Subir"${i===0?" disabled":""}>${I.up}</button>
-        <button type="button" class="ib" data-act="down" data-day="${d.id}" data-i="${i}" aria-label="Descer"${i===n-1?" disabled":""}>${I.down}</button>
-        <button type="button" class="ib del" data-act="del" data-day="${d.id}" data-i="${i}" aria-label="Remover atividade">${I.del}</button>
-      </span></div>`).join("")||`<p class="tl-empty">Nenhuma atividade.</p>`}
-    <div class="btns">
-      <button type="button" class="btn add-line" data-act="add-item" data-day="${d.id}">${I.plus}Adicionar atividade</button>
-      ${n>1?`<button type="button" class="btn add-line" data-act="sort" data-day="${d.id}">${I.clock}Ordenar por horário</button>`:""}
-    </div>
-    <h4>Avisos</h4>
-    ${fl.map((f,i)=>`<div class="row flagrow">
-      <select data-f="fk" data-day="${d.id}" data-i="${i}" aria-label="Tipo do aviso">${Object.entries(FLAG_KINDS).map(([k,v])=>`<option value="${k}"${f[0]===k?" selected":""}>${v}</option>`).join("")}</select>
-      <input data-f="ft" data-day="${d.id}" data-i="${i}" value="${esc(f[1])}" placeholder="Texto do aviso" aria-label="Texto do aviso">
-      <span class="tools"><button type="button" class="ib del" data-act="del-flag" data-day="${d.id}" data-i="${i}" aria-label="Remover aviso">${I.del}</button></span></div>`).join("")||`<p class="tl-empty">Nenhum aviso.</p>`}
-    <button type="button" class="btn add-line" data-act="add-flag" data-day="${d.id}">${I.plus}Adicionar aviso</button>
-    <div class="day-actions">
-      <button type="button" class="btn primary" data-act="done" data-day="${d.id}">${I.check}Concluir</button>
-      ${hasDefault?`<button type="button" class="btn ghost danger" data-act="reset" data-day="${d.id}">Restaurar original</button>`:""}
-    </div>
-  </div>`;
-}
-function dayHTML(d){
-  const t=todayISO(), open=openDays.has(d.id), edit=editDays.has(d.id)&&canWrite, p=dateParts(d.date), ph=PHASES[d.phase]||PHASES.paris;
-  const doneN=d.items.filter(x=>x.done).length;
-  return `<article class="day${d.date===t?" today":""}" id="day-${d.id}" style="--c:${ph[1]};--soft:${ph[2]}">
-    <button type="button" class="day-head" data-act="toggle" data-day="${d.id}" aria-expanded="${open}" aria-controls="body-${d.id}">
-      <span class="date"><b>${p.dd}</b><small>${p.wd}</small></span>
-      <span class="ttl"><span class="dtitle">${esc(d.title)}</span><span class="meta"><span>${esc(d.base)}</span><span class="count">${doneN?`${doneN}/`:""}${d.items.length} ${d.items.length===1?"atividade":"atividades"}</span>${state.notes[d.id]?"<span>· tem anotação</span>":""}</span></span>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-    </button>
-    <div class="day-body" id="body-${d.id}"${open?"":" hidden"}>${open?(edit?editBody(d):viewBody(d)):""}</div>
-  </article>`;
-}
-function renderDays(){
-  if(editItem||($("line").contains(document.activeElement)&&document.activeElement.matches("input,textarea,select"))){renderDays.pending=true;return}
-  renderDays.pending=false;
-  renderStrip();
-  $("line").innerHTML=getDays().map(dayHTML).join("");
-  fillNotes();
-}
-function renderDay(id){
-  const d=dayById(id), el=$("day-"+id); if(!d||!el) return;
-  el.outerHTML=dayHTML(d); fillNotes(); renderStrip();
-}
-function fillNotes(){
-  document.querySelectorAll("textarea.note").forEach(t=>{
-    if(document.activeElement!==t) t.value=state.notes[t.dataset.day]||"";
-    t.readOnly=!canWrite;
-  });
-}
-async function saveNote(day,text){
-  if((state.notes[day]||"")===text) return;
-  state.notes[day]=text;
-  if(db&&!localMode){try{await db.doc("notas/"+day).set({texto:text})}catch(e){handleWriteError(e)}}
-  else saveLocal();
-}
-
-/* ---------- Roteiro: interação ---------- */
-function setupDays(){
-  const line=$("line");
-  line.addEventListener("click",e=>{
-    const b=e.target.closest("[data-act]"); if(!b) return;
-    const act=b.dataset.act;
-    if(act==="add-link-row"){ b.previousElementSibling.insertAdjacentHTML("beforeend",linkRow()); b.previousElementSibling.lastElementChild.querySelector("input").focus(); return }
-    if(act==="del-link-row"){ b.closest(".lrow").remove(); return }
-    const id=b.dataset.day, d=dayById(id), i=+b.dataset.i, it=b.dataset.item?itemById(d,b.dataset.item):null;
-    if(act==="toggle"){ openDays.has(id)?openDays.delete(id):openDays.add(id); if(!openDays.has(id)) editDays.delete(id); renderDay(id); return }
-    if(act==="item"){ const was=openItems.has(it.id); openOnly(d,was?null:it.id); if(editItem===it.id) editItem=null; renderDay(id); return }
-    if(act==="map-item"){ mapItems.has(it.id)?mapItems.delete(it.id):mapItems.add(it.id); renderDay(id); return }
-    if(!canWrite) return;
-    if(act==="edit-item"){ editItem=it.id; renderDay(id); focusIn(id,`[data-item-form] input[name="t"]`); return }
-    if(act==="cancel-item"){ editItem=null; renderDay(id); return }
-    if(act==="del-item"){ if(!confirm(`Excluir “${it.t}”?`)) return; d.items=d.items.filter(x=>x!==it); editItem=null; saveDays(); renderDay(id); toast("Atividade excluída"); return }
-    if(act==="done-item"){ it.done=!it.done; saveDays(); renderDay(id); return }
-    if(act==="edit"){ editDays.add(id); renderDay(id); focusIn(id,"#e-title-"+id); return }
-    if(act==="done"){ editDays.delete(id); renderDay(id); toast("Dia atualizado"); return }
-    if(act==="up"&&i>0){ [d.items[i-1],d.items[i]]=[d.items[i],d.items[i-1]] }
-    else if(act==="down"&&i<d.items.length-1){ [d.items[i+1],d.items[i]]=[d.items[i],d.items[i+1]] }
-    else if(act==="del"){ d.items.splice(i,1) }
-    else if(act==="sort"){ d.items=sortByTime(d.items); toast("Atividades ordenadas por horário") }
-    else if(act==="add-item"){ d.items.push(normItem(["",""])); saveDays(); renderDay(id); focusIn(id,`[data-f="ih"][data-i="${d.items.length-1}"]`); return }
-    else if(act==="del-flag"){ d.flags.splice(i,1) }
-    else if(act==="add-flag"){ d.flags.push(["info",""]); saveDays(); renderDay(id); focusIn(id,`[data-f="ft"][data-i="${d.flags.length-1}"]`); return }
-    else if(act==="reset"){
-      if(!confirm("Voltar este dia ao roteiro original? As mudanças feitas nele serão perdidas.")) return;
-      const orig=normDay(clone(DEFAULT_DAYS.find(x=>x.id===id))); Object.keys(d).forEach(k=>delete d[k]); Object.assign(d,orig);
-      editDays.delete(id); toast("Dia restaurado");
-    } else return;
-    saveDays(); renderDay(id);
-  });
-  line.addEventListener("change",e=>{
-    const el=e.target, f=el.dataset.f; if(!f) return;
-    const d=dayById(el.dataset.day), i=+el.dataset.i, v=el.value.trim();
-    if(f==="title") d.title=v||"Sem título";
-    else if(f==="base") d.base=v;
-    else if(f==="cost") d.cost=v;
-    else if(f==="phase"){ d.phase=el.value; saveDays(); renderDay(d.id); return }
-    else if(f==="ih") d.items[i].h=v;
-    else if(f==="it") d.items[i].t=v;
-    else if(f==="fk") d.flags[i][0]=el.value;
-    else if(f==="ft") d.flags[i][1]=v;
-    saveDays();
-    if(f==="title"||f==="base"){ const el2=$("day-"+d.id); el2.querySelector(".dtitle").textContent=d.title; el2.querySelector(".meta span").textContent=d.base; renderStrip() }
-  });
-  line.addEventListener("submit",e=>{
-    e.preventDefault();
-    const f=e.target;
-    if(f.matches("[data-item-form]")){
-      const d=dayById(f.dataset.day), it=itemById(d,f.dataset.item); if(!it) return;
-      const oldH=it.h;
-      it.h=f.h.value.trim(); it.t=f.t.value.trim()||it.t; it.p=f.p.value.trim(); it.how=f.how.value.trim(); it.obs=f.obs.value.trim(); it.done=f.done.value==="1";
-      it.links=[...f.querySelectorAll(".lrow")].map(r=>{const u=safeUrl(r.querySelector('[name="lu"]').value);return u?{l:r.querySelector('[name="ll"]').value.trim()||hostOf(u),u}:null}).filter(Boolean);
-      if(it.h!==oldH&&mins(it.h)!=null){ d.items=d.items.filter(x=>x!==it); insertByTime(d.items,it) }
-      editItem=null; saveDays(); renderDay(d.id); toast("Atividade salva");
-      return;
-    }
-    if(f.matches("form[data-quick]")){
-      const id=f.dataset.quick, h=f.h.value.trim(), t=f.t.value.trim(); if(!t) return;
-      const d=dayById(id), it=normItem([h,t]);
-      insertByTime(d.items,it); openOnly(d,it.id); editItem=null; saveDays(); renderDay(id);
-      focusIn(id,'form[data-quick] input[name="h"]'); toast("Adicionada. Toque nela para pôr local, rota e links");
-    }
-  });
-  line.addEventListener("focusout",e=>{
-    if(e.target.matches("textarea.note")) saveNote(e.target.dataset.day,e.target.value);
-    setTimeout(()=>{ if(renderDays.pending) renderDays() },0);
-  });
-  $("strip").addEventListener("click",e=>{
-    const b=e.target.closest("[data-go]"); if(!b) return;
-    const id=b.dataset.go; openDays.add(id); renderDay(id);
-    $("day-"+id).scrollIntoView({behavior:"smooth",block:"start"});
-  });
-  // Atualiza o destaque "Próximo" durante a viagem.
-  setInterval(()=>{ if(getDays().some(d=>d.date===todayISO())) renderDays() },60000);
-}
-function openOnly(d,iid){ d.items.forEach(x=>openItems.delete(x.id)); if(iid) openItems.add(iid) }
-function focusIn(id,sel){ const el=$("day-"+id)?.querySelector(sel); if(el) el.focus() }
-
-/* ---------- Cabeçalho ---------- */
-function renderCountdown(){
-  const dep=new Date("2026-10-19T18:00:00-03:00"), back=new Date("2026-10-29T19:55:00-03:00"), now=new Date();
-  const el=$("countdown");
-  if(now<dep){const d=Math.ceil((dep-now)/864e5);el.innerHTML=`<strong>${d}</strong><span>${d===1?"dia":"dias"} para o embarque</span>`}
-  else if(now<back){el.innerHTML=`<strong>Bon voyage</strong><span>a viagem está acontecendo</span>`}
-  else{el.innerHTML=`<strong>Voltaram</strong><span>que lua de mel</span>`}
-}
-function updateStats(){
-  const all=CHECK.flatMap(g=>g.items), done=all.filter(i=>state.checks[i[0]]).length;
-  const acts=getDays().reduce((s,d)=>s+d.items.length,0);
-  const spent=state.expenses.reduce((s,e)=>s+toBRL(e),0);
-  $("stats").innerHTML=`<div class="stat"><span>Atividades</span><b>${acts}</b></div><div class="stat"><span>Reservas feitas</span><b>${done}/${all.length}</b></div><div class="stat"><span>Gasto na viagem</span><b>${brl(spent)}</b></div>`;
-}
-
-/* ---------- Reservas ---------- */
-function renderBookings(){
-  $("bookings").innerHTML=BOOKINGS.map(b=>`
-   <div class="card booking">
-    <div class="kind">${b.kind}</div><h3>${b.title}</h3>
-    ${b.from?`<div class="route"><span>${b.from[0]}<small>${b.from[1]}</small></span><span class="arrow" aria-hidden="true"></span><span>${b.to[0]}<small>${b.to[1]}</small></span></div>`:""}
-    <dl>${b.rows.map(r=>`<dt>${r[0]}</dt><dd>${esc(r[1])}</dd>`).join("")}</dl>
-    ${b.map?`<div class="btns"><a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.map)}">Abrir no mapa</a></div>`:""}
-   </div>`).join("");
-}
-
-/* ---------- A fazer ---------- */
-function renderChecklist(){
-  const all=CHECK.flatMap(g=>g.items), done=all.filter(i=>state.checks[i[0]]).length;
-  $("prog-bar").style.width=(done/all.length*100)+"%";
-  $("prog-text").textContent=`${done} de ${all.length} feitos`;
-  $("checklist").innerHTML=CHECK.map(g=>`
-   <div class="card group"><h3>${g.group}</h3>
-    ${g.items.map(i=>`<label class="check${state.checks[i[0]]?" done":""}"><input type="checkbox" data-id="${i[0]}"${state.checks[i[0]]?" checked":""}${canWrite?"":" disabled"}><span>${esc(i[1])}</span></label>`).join("")}
-   </div>`).join("");
-  document.querySelectorAll("#checklist input").forEach(c=>c.addEventListener("change",()=>toggleCheck(c.dataset.id,c.checked)));
-  updateStats();
-}
-let checkWriting=false, checkDirty=false;
-async function toggleCheck(id,val){
-  state.checks[id]=val; renderChecklist();
-  if(!db||localMode){saveLocal();return}
-  if(checkWriting){checkDirty=true;return}
-  checkWriting=true;
-  do{checkDirty=false;try{await db.doc("estado/checklist").set({itens:{...state.checks}})}catch(e){handleWriteError(e);break}}while(checkDirty);
-  checkWriting=false;
-}
-
-/* ---------- Orçamento ---------- */
-function toBRL(e){return e.moeda==="BRL"?e.valor:e.valor*state.rate}
-function renderBudget(){
-  const r=state.rate;
-  $("rate").value=r;
-  const paid=PAID.reduce((s,p)=>s+p[1],0);
-  const planE=PLAN.reduce((s,p)=>s+p[3],0), planB=planE*r;
-  const spentB=state.expenses.reduce((s,e)=>s+toBRL(e),0);
-  const total=paid+planB;
-  $("totals").innerHTML=`
-    <div class="tot"><span>Teto</span><strong>${brl(CEILING)}</strong></div>
-    <div class="tot"><span>Já pago</span><strong>${brl(paid)}</strong></div>
-    <div class="tot"><span>Previsto em solo</span><strong>${brl(planB)}</strong></div>
-    <div class="tot"><span>Gasto na viagem</span><strong>${brl(spentB)}</strong></div>`;
-  const max=Math.max(total,CEILING,paid+spentB);
-  $("stack").innerHTML=`<b style="width:${paid/max*100}%;background:var(--ink)"></b><b style="width:${planB/max*100}%;background:var(--seine)"></b>`;
-  $("stack-legend").innerHTML=`<span><i style="background:var(--ink)"></i>Pago</span><span><i style="background:var(--seine)"></i>Previsto em solo</span><span>Total previsto: ${brl(total)}</span>`;
-  $("budget-warn").innerHTML= total>CEILING
-    ? `<p class="warn">O total previsto passa o teto em ${brl(total-CEILING)}. Os cortes que mais pesam: Disney em 1 dia (cerca de €250), café e jantar no Airbnb em 4 dias (cerca de €200) e compras de €150 para €50.</p>` : "";
-
-  const byCat={}; state.expenses.forEach(e=>{byCat[e.cat]=(byCat[e.cat]||0)+toBRL(e)});
-  $("plan").innerHTML=`
-    <thead><tr><th>Item</th><th class="num">Previsto</th><th class="num">Em R$</th><th class="num">Gasto</th></tr></thead>
-    <tbody>${PLAN.map(p=>`<tr><td>${p[1]}<br><small style="color:var(--muted)">${p[2]}</small></td><td class="num">${eur(p[3])}</td><td class="num">${brl(p[3]*r)}</td><td class="num">${byCat[p[0]]?brl(byCat[p[0]]):"—"}</td></tr>`).join("")}</tbody>
-    <tfoot><tr><td>Total</td><td class="num">${eur(planE)}</td><td class="num">${brl(planB)}</td><td class="num">${brl(spentB)}</td></tr></tfoot>`;
-
-  const list=[...state.expenses].sort((a,b)=>(b.criadoEm||0)-(a.criadoEm||0));
-  $("spent").innerHTML= list.length
-    ? `<thead><tr><th>Gasto</th><th class="num">Valor</th><th class="num">Em R$</th><th><span class="sr">Apagar</span></th></tr></thead>
-       <tbody>${list.map(e=>`<tr><td>${esc(e.desc)}<br><small style="color:var(--muted)">${esc((CATS.find(c=>c[0]===e.cat)||["","Outros"])[1])}</small></td><td class="num">${e.moeda==="BRL"?brl(e.valor):eur(e.valor)}</td><td class="num">${brl(toBRL(e))}</td><td>${canWrite?`<button class="x" data-del="${esc(e.id)}" aria-label="Apagar ${esc(e.desc)}">×</button>`:""}</td></tr>`).join("")}</tbody>`
-    : `<tbody><tr><td class="empty">Nenhum gasto ainda. Registrem cada gasto durante a viagem para comparar com o previsto.</td></tr></tbody>`;
-  document.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click",()=>deleteExpense(b.dataset.del)));
-  renderConv(); updateStats();
-}
-function fillCats(){$("g-cat").innerHTML=CATS.map(c=>`<option value="${c[0]}">${c[1]}</option>`).join("")}
-async function addExpense(ev){
-  ev.preventDefault();
-  const desc=$("g-desc").value.trim(), valor=parseFloat($("g-val").value);
-  if(!desc||!(valor>=0)) return;
-  const e={desc,valor,moeda:$("g-cur").value,cat:$("g-cat").value,criadoEm:Date.now()};
-  $("add-form").reset();
-  if(db&&!localMode){try{await db.collection("gastos").add(e)}catch(err){handleWriteError(err)}}
-  else{e.id="l"+e.criadoEm;state.expenses.push(e);saveLocal();renderBudget()}
-  toast("Gasto registrado");
-}
-async function deleteExpense(id){
-  if(db&&!localMode){try{await db.doc("gastos/"+id).delete()}catch(e){handleWriteError(e)}}
-  else{state.expenses=state.expenses.filter(e=>e.id!==id);saveLocal();renderBudget()}
-}
-let rateTimer;
-function onRate(){
-  const v=parseFloat($("rate").value);
-  if(!(v>0)) return;
-  clearTimeout(rateTimer);
-  rateTimer=setTimeout(async()=>{
-    if(v===state.rate) return;
-    state.rate=v; renderBudget();
-    if(db&&!localMode){try{await db.doc("estado/config").set({cambio:v})}catch(e){handleWriteError(e)}} else saveLocal();
-  },600);
-}
-function renderConv(){
-  const v=parseFloat($("conv-in").value)||0;
-  $("conv-out").textContent=`${brl(v*state.rate)} (a R$ ${state.rate.toLocaleString("pt-BR")})`;
-}
-
-/* ---------- Backup ---------- */
-function exportBackup(){
-  const data={app:"lua-de-mel-paris",versao:1,exportadoEm:new Date().toISOString(),dados:state};
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,1)],{type:"application/json"}));
-  a.download=`lua-de-mel-backup-${todayISO()}.json`;
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-}
-function importBackup(file){
-  const r=new FileReader();
-  r.onload=()=>{
-    try{
-      const j=JSON.parse(r.result), s=j&&j.dados;
-      if(!s||j.app!=="lua-de-mel-paris") throw 0;
-      if(!confirm("Substituir o roteiro, anotações, checklist e gastos deste aparelho pelos do backup?")) return;
-      state.checks=s.checks||{}; state.notes=s.notes||{}; state.rate=s.rate>0?s.rate:state.rate;
-      state.expenses=Array.isArray(s.expenses)?s.expenses:[]; state.days=Array.isArray(s.days)?s.days:null;
-      saveLocal(); renderDays(); renderChecklist(); renderBudget(); toast("Backup importado");
-    }catch(e){ toast("Esse arquivo não é um backup deste app") }
-  };
-  r.readAsText(file);
-}
-
-/* ---------- Sincronização ---------- */
-function handleWriteError(e){
-  if(e&&e.code==="invalid_argument"){canWrite=false;renderDays();renderChecklist();renderBudget();
-    setSync("Vocês podem ver tudo, mas só quem tem acesso de edição consegue alterar.")}
-  else setSync("Não foi possível salvar agora. Tente de novo em instantes.");
-}
-function setSync(t){$("sync-note").textContent=t}
-
-async function connect(){
-  try{
-    db = await (window.claude && window.claude.use ? window.claude.use("db") : null);
-    const user = await (window.claude && window.claude.use ? window.claude.use("user") : null);
-    if(user){try{const c=await user.can("data.write");if(c===false)canWrite=false}catch(e){}}
-  }catch(e){db=null}
-  if(!db){localMode=true;loadLocal();refreshAll();setSync("Salvo neste aparelho. Use Guia → Backup para passar ao outro celular.");$("backup-card").hidden=false;return}
-  $("backup-card").hidden=true;
-  setSync("Roteiro, anotações, checklist e gastos ficam salvos para vocês dois.");
-  db.collection("notas").onSnapshot(s=>{s.docs.forEach(d=>{state.notes[d.id]=(d.data()||{}).texto||""});fillNotes()},()=>{});
-  db.doc("estado/roteiro").onSnapshot(s=>{if(s.exists){try{const v=JSON.parse((s.data()||{}).dias||"null");if(Array.isArray(v)){state.days=v;renderDays();updateStats()}}catch(e){}}},()=>{});
-  db.doc("estado/checklist").onSnapshot(s=>{if(s.exists){state.checks={...((s.data()||{}).itens||{})};renderChecklist()}},()=>{});
-  db.doc("estado/config").onSnapshot(s=>{if(s.exists){const c=(s.data()||{}).cambio;if(c>0){state.rate=c;renderBudget()}}},()=>{});
-  db.collection("gastos").onSnapshot(s=>{state.expenses=s.docs.map(d=>({id:d.id,...d.data()}));renderBudget()},()=>{});
-  refreshAll();
-}
-function refreshAll(){renderDays();renderChecklist();renderBudget()}
-
-/* ---------- Abas ---------- */
-function setupTabs(){
-  const tabs=[...document.querySelectorAll('[role="tab"]')];
-  tabs.forEach((t,i)=>{
-    t.addEventListener("click",()=>select(t));
-    t.addEventListener("keydown",e=>{
-      if(e.key==="ArrowRight"||e.key==="ArrowLeft"){const n=tabs[(i+(e.key==="ArrowRight"?1:-1)+tabs.length)%tabs.length];n.focus();select(n)}
-    });
-  });
-  function select(t){
-    tabs.forEach(x=>{x.setAttribute("aria-selected",String(x===t));x.tabIndex=x===t?0:-1});
-    document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id===t.getAttribute("aria-controls")));
-    const top=$("roteiro").getBoundingClientRect().top+scrollY-70;
-    if(scrollY>top) window.scrollTo({top:Math.max(0,top)});
-  }
-  tabs.forEach(x=>x.tabIndex=x.getAttribute("aria-selected")==="true"?0:-1);
-}
-
-/* ---------- Início ---------- */
-(function openToday(){const t=todayISO();const d=DEFAULT_DAYS.find(x=>x.date===t);if(d)openDays.add(d.id)})();
-renderCountdown();renderBookings();fillCats();setupTabs();setupDays();
-$("add-form").addEventListener("submit",addExpense);
-$("rate").addEventListener("input",onRate);
-$("conv-in").addEventListener("input",renderConv);
-$("export-btn").addEventListener("click",exportBackup);
-$("import-file").addEventListener("change",e=>{const f=e.target.files[0];if(f)importBackup(f);e.target.value=""});
-connect();
-if("serviceWorker" in navigator && location.protocol.startsWith("http")){
-  window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
-}
-</script>
 </body></html>
