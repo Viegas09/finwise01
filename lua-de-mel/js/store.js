@@ -23,6 +23,7 @@ export const getBookings  = () => state.bookings  || (state.bookings=clone(DEFAU
 export function getBudget(){
   if(!state.budget) state.budget=clone(DEFAULT_BUDGET);
   const b=state.budget; b.paid=b.paid||[]; b.plan=b.plan||[]; if(!(b.rate>0)) b.rate=6.5; if(!(b.ceiling>=0)) b.ceiling=0;
+  b.plan.forEach(p=>{ if(p.value==null){ p.value=+p.eur||0; p.cur=p.cur||"EUR" } if(p.cur!=="BRL") p.cur="EUR"; delete p.eur; p.note=p.note||""; p.name=p.name||"" });
   return b;
 }
 

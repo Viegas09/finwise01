@@ -122,13 +122,13 @@ export const DEFAULT_BUDGET = {
   ceiling:15000, rate:6.5,
   paid:[{id:"p1",name:"Passagens",value:3875.23},{id:"p2",name:"Hospedagens",value:6164.60}],
   plan:[
-   {id:"disney",name:"Ingressos Disney",note:"2 dias, 2 parques",eur:400},
-   {id:"disneyfood",name:"Comida na Disney",note:"2 dias",eur:180},
-   {id:"atracoes",name:"Atrações em Paris",note:"Torre, Louvre, Versalhes, cruzeiro",eur:220},
-   {id:"comida",name:"Comida fora da Disney",note:"cerca de €100 por dia",eur:740},
-   {id:"transporte",name:"Transporte",note:"2 Navigo por pessoa",eur:140},
-   {id:"compras",name:"Compras e souvenirs",note:"teto",eur:150},
-   {id:"imprevistos",name:"Imprevistos",note:"reserva",eur:150}]
+   {id:"disney",name:"Ingressos Disney",note:"2 dias, 2 parques",value:400,cur:"EUR"},
+   {id:"disneyfood",name:"Comida na Disney",note:"2 dias",value:180,cur:"EUR"},
+   {id:"atracoes",name:"Atrações em Paris",note:"Torre, Louvre, Versalhes, cruzeiro",value:220,cur:"EUR"},
+   {id:"comida",name:"Comida fora da Disney",note:"cerca de €100 por dia",value:740,cur:"EUR"},
+   {id:"transporte",name:"Transporte",note:"2 Navigo por pessoa",value:140,cur:"EUR"},
+   {id:"compras",name:"Compras e souvenirs",note:"teto",value:150,cur:"EUR"},
+   {id:"imprevistos",name:"Imprevistos",note:"reserva",value:150,cur:"EUR"}]
 };
 
 export const WISH_KINDS = {food:"Restaurante / café",tour:"Passeio",shop:"Compras",other:"Outro"};

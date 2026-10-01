@@ -81,8 +81,9 @@
 
   <!-- ORÇAMENTO -->
   <section class="panel" id="orcamento" role="tabpanel" aria-labelledby="t-orcamento">
-    <h2>Gastos e orçamento</h2>
-    <p class="lead">O que já foi pago, o que está previsto em solo e o que vocês gastarem de verdade durante a viagem.</p>
+    <div class="panel-head"><h2>Gastos e orçamento</h2><button type="button" class="btn sm" id="budget-edit">Editar orçamento</button></div>
+    <p class="lead">O que já foi pago, o que está previsto em solo e o que vocês gastarem de verdade durante a viagem. Os valores do orçamento são vocês que definem.</p>
+    <div id="budget-editor"></div>
     <div class="totals" id="totals"></div>
     <div class="stack" id="stack" role="img" aria-label="Pago, previsto e teto"></div>
     <div class="stack-legend" id="stack-legend"></div>
@@ -104,9 +105,9 @@
     <h3 class="sub">Gasto por dia</h3>
     <div class="card" id="by-day"></div>
 
-    <div class="panel-head"><h3 class="sub">Previsto em solo</h3><button type="button" class="btn sm" id="budget-edit">Editar orçamento</button></div>
+    <h3 class="sub">Previsto em solo</h3>
     <div class="card">
-      <div class="field"><label for="rate">Câmbio usado (R$ por €)</label><input id="rate" inputmode="decimal"></div>
+      <p class="hint" id="rate-note"></p>
       <div class="table-wrap"><table id="plan"></table></div>
     </div>
   </section>
