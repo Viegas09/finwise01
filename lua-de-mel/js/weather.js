@@ -1,6 +1,6 @@
 /* Previsão do tempo por dia (Open-Meteo: gratuito, sem chave). Guarda o resultado para usar offline. */
-import {WEATHER_PLACES} from "./data.js";
-import {addDays, isoToday} from "./utils.js";
+import {WEATHER_PLACES} from "./data.js?v=6";
+import {addDays, isoToday} from "./utils.js?v=6";
 
 const LS = "ldm-weather";
 const MAX_AGE = 3*3600e3;      // atualiza a cada 3 h

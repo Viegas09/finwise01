@@ -1,9 +1,9 @@
 import {esc, rich, brl, eur, uid, clone, dateParts, isoToday, mins, insertByTime, sortByTime, safeUrl, hostOf,
   gmap, gdir, gembed, routeOf, normItem, normDay, nextItemId, parseMoney, sumBy, weatherKind,
-  encodeInvite, decodeInvite, parseFirebaseConfig, newTripCode} from "./utils.js";
-import {DEFAULT_DAYS, PHASES, FLAG_KINDS, TRIP, BOOKING_KINDS, WISH_KINDS, EMERGENCY, PHRASES} from "./data.js";
-import * as S from "./store.js";
-import * as W from "./weather.js";
+  encodeInvite, decodeInvite, parseFirebaseConfig, newTripCode} from "./utils.js?v=6";
+import {DEFAULT_DAYS, PHASES, FLAG_KINDS, TRIP, BOOKING_KINDS, WISH_KINDS, EMERGENCY, PHRASES} from "./data.js?v=6";
+import * as S from "./store.js?v=6";
+import * as W from "./weather.js?v=6";
 
 const {state}=S;
 const $ = id => document.getElementById(id);
@@ -768,9 +768,10 @@ function setupTabs(){
   $("sync-badge").addEventListener("click",()=>{ select($("t-guia")); $("sync-card").scrollIntoView({behavior:"smooth"}) });
   tabs.forEach(x=>x.tabIndex=x.getAttribute("aria-selected")==="true"?0:-1);
 }
-function renderAll(){ renderDays(true); renderWishes(); renderBookings(); renderChecklist(); renderBudget(); renderSync(); renderSyncBadge(); updateStats() }
+function renderAll(){ for(const fn of [()=>renderDays(true),renderWishes,renderBookings,renderChecklist,renderBudget,renderSync,renderSyncBadge,updateStats]) try{fn()}catch(e){console.error(e)} }
 
-S.onChange(key=>{
+S.onChange(key=>{ try{ onStoreChange(key) }catch(e){ console.error(e) } });
+function onStoreChange(key){
   switch(key){
     case "days": case "notes": renderDays(); break;
     case "checks": case "checklist": renderChecklist(); break;
@@ -782,14 +783,14 @@ S.onChange(key=>{
     case "all": renderAll(); return;
   }
   updateStats();
-});
+}
 
 async function start(){
   document.documentElement.classList.remove("no-js");
   S.loadLocal();
   const t=isoToday(), today=DEFAULT_DAYS.find(x=>x.date===t); if(today) openDays.add(today.id);
-  renderCountdown(); renderGuideStatic();
-  setupTabs(); setupDays(); setupWishes(); setupBookings(); setupChecklist(); setupBudget(); setupSync(); setupBackup();
+  const safe=fn=>{try{fn()}catch(e){console.error(e)}};
+  [renderCountdown,renderGuideStatic,setupTabs,setupDays,setupWishes,setupBookings,setupChecklist,setupBudget,setupSync,setupBackup].forEach(safe);
   renderAll();
   S.loadFiles();
   if(!(await handleInvite())) S.connect();
