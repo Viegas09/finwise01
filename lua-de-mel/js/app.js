@@ -531,29 +531,39 @@ function setupChecklist(){
    ====================================================================== */
 let editBudget=false;
 const toBRL = (e,r) => e.moeda==="BRL"?+e.valor:+e.valor*r;
-function renderBudget(force){
+const planBRL = (p,r) => p.cur==="BRL"?+p.value||0:(+p.value||0)*r;
+const money = (v,cur) => cur==="BRL"?brl(v):eur(v);
+const num = v => { v=+v||0; return v.toLocaleString("pt-BR",Number.isInteger(v)?{}:{minimumFractionDigits:2,maximumFractionDigits:2}) };
+function renderBudget(force,keepEditor){
   guarded("orcamento",()=>{
     const B=S.getBudget(), r=B.rate;
-    if(document.activeElement!==$("rate")) $("rate").value=r;
     const paid=B.paid.reduce((s,p)=>s+(+p.value||0),0);
-    const planE=B.plan.reduce((s,p)=>s+(+p.eur||0),0), planB=planE*r;
+    const planB=B.plan.reduce((s,p)=>s+planBRL(p,r),0);
     const byCat=sumBy(state.expenses,"cat",r), byDay=sumBy(state.expenses,"day",r);
     const spentB=Object.values(byCat).reduce((a,b)=>a+b,0), total=paid+planB;
+    $("budget-edit").innerHTML=editBudget?`${I.check}Concluir`:`${I.edit}Editar orçamento`;
+    $("budget-edit").classList.toggle("primary",editBudget);
+    if(!editBudget) $("budget-editor").innerHTML="";
+    else if(!keepEditor&&!typing($("budget-editor"))) $("budget-editor").innerHTML=budgetEditor(B);
     $("totals").innerHTML=`
-      <div class="tot"><span>Teto</span><strong>${brl(B.ceiling)}</strong></div>
+      <div class="tot"><span>Teto</span><strong>${B.ceiling?brl(B.ceiling):"—"}</strong></div>
       <div class="tot"><span>Já pago</span><strong>${brl(paid)}</strong></div>
       <div class="tot"><span>Previsto em solo</span><strong>${brl(planB)}</strong></div>
       <div class="tot"><span>Gasto na viagem</span><strong>${brl(spentB)}</strong></div>`;
     const max=Math.max(total,B.ceiling,paid+spentB)||1;
     $("stack").innerHTML=`<b style="width:${paid/max*100}%;background:var(--ink)"></b><b style="width:${planB/max*100}%;background:var(--seine)"></b>${B.ceiling?`<i style="left:${Math.min(100,B.ceiling/max*100)}%" title="Teto"></i>`:""}`;
-    $("stack-legend").innerHTML=`<span><i style="background:var(--ink)"></i>Pago</span><span><i style="background:var(--seine)"></i>Previsto em solo</span><span><i class="tick-legend"></i>Teto</span><span>Total previsto: ${brl(total)}</span>`;
-    $("budget-warn").innerHTML=B.ceiling&&total>B.ceiling?`<p class="warn">O total previsto passa o teto em ${brl(total-B.ceiling)}. Revejam o previsto em solo (por exemplo, Disney em 1 dia ou menos refeições fora) ou ajustem o teto.</p>`:"";
+    $("stack-legend").innerHTML=`<span><i style="background:var(--ink)"></i>Pago</span><span><i style="background:var(--seine)"></i>Previsto em solo</span>${B.ceiling?`<span><i class="tick-legend"></i>Teto</span>`:""}<span>Total previsto: ${brl(total)}</span>`;
+    $("budget-warn").innerHTML=!B.ceiling&&!paid&&!planB
+      ? `<p class="hint-box">Orçamento vazio. Toque em <b>Editar orçamento</b> para definir o teto, o que já foi pago e o previsto.</p>`
+      : B.ceiling&&total>B.ceiling?`<p class="warn">O total previsto passa o teto em ${brl(total-B.ceiling)}. Revejam o previsto em solo ou ajustem o teto.</p>`:"";
 
     const today=tripDayToday();
-    $("g-cat").innerHTML=B.plan.map(p=>opt(p.id,p.name)).join("")+opt("","Outros");
-    if(!typing($("add-form"))) $("g-day").innerHTML=opt("","Sem dia")+S.getDays().map(d=>opt(d.id,dayLabel(d),today===d)).join("");
+    if(!typing($("add-form"))){
+      $("g-cat").innerHTML=B.plan.map(p=>opt(p.id,p.name||"Sem nome")).join("")+opt("","Outros");
+      $("g-day").innerHTML=opt("","Sem dia")+S.getDays().map(d=>opt(d.id,dayLabel(d),today===d)).join("");
+    }
 
-    const catName=id=>(B.plan.find(p=>p.id===id)||{name:"Outros"}).name;
+    const catName=id=>(B.plan.find(p=>p.id===id)||{name:"Outros"}).name||"Sem nome";
     const dayName=id=>{const d=dayById(id);if(!d)return "";const p=dateParts(d.date);return `${p.wd} ${p.dd}`};
     const list=[...state.expenses].sort((a,b)=>(b.criadoEm||0)-(a.criadoEm||0));
     $("spent").innerHTML=list.length
@@ -565,50 +575,68 @@ function renderBudget(force){
     $("by-day").innerHTML=dayRows.length?dayRows.map(d=>`<div class="bar-row"><span>${esc(dayName(d.id))}</span><div class="bar"><b style="width:${byDay[d.id]/maxDay*100}%"></b></div><strong>${brl(byDay[d.id])}</strong></div>`).join("")
       +(byDay[""]?`<p class="hint" style="margin-top:8px">Sem dia: ${brl(byDay[""])}</p>`:""):`<p class="empty">Escolham o dia ao registrar um gasto para ver aqui quanto foi gasto em cada dia.</p>`;
 
-    $("plan").innerHTML=editBudget?budgetEditor(B):`
+    $("rate-note").textContent=`Câmbio usado: R$ ${r.toLocaleString("pt-BR")} por €`;
+    $("plan").innerHTML=B.plan.length?`
       <thead><tr><th>Item</th><th class="num">Previsto</th><th class="num">Gasto</th></tr></thead>
-      <tbody>${B.plan.map(p=>`<tr><td>${esc(p.name)}<br><small class="muted">${esc(p.note)}</small></td><td class="num">${eur(p.eur)}<br><small class="muted">${brl(p.eur*r)}</small></td><td class="num${byCat[p.id]>p.eur*r?" over":""}">${byCat[p.id]?brl(byCat[p.id]):"—"}</td></tr>`).join("")}
+      <tbody>${B.plan.map(p=>`<tr><td>${esc(p.name||"Sem nome")}${p.note?`<br><small class="muted">${esc(p.note)}</small>`:""}</td><td class="num">${money(p.value,p.cur)}${p.cur!=="BRL"?`<br><small class="muted">${brl(planBRL(p,r))}</small>`:""}</td><td class="num${byCat[p.id]>planBRL(p,r)?" over":""}">${byCat[p.id]?brl(byCat[p.id]):"—"}</td></tr>`).join("")}
       ${byCat[""]?`<tr><td>Outros</td><td class="num">—</td><td class="num">${brl(byCat[""])}</td></tr>`:""}</tbody>
-      <tfoot><tr><td>Total</td><td class="num">${eur(planE)}<br><small class="muted">${brl(planB)}</small></td><td class="num">${brl(spentB)}</td></tr></tfoot>`;
-    $("budget-edit").textContent=editBudget?"Concluir":"Editar orçamento";
-    $("budget-edit").classList.toggle("primary",editBudget);
+      <tfoot><tr><td>Total</td><td class="num">${brl(planB)}</td><td class="num">${brl(spentB)}</td></tr></tfoot>`
+      :`<tbody><tr><td class="empty">Nenhuma categoria prevista. Use “Editar orçamento” para criar.</td></tr></tbody>`;
     renderConv();
   },force);
 }
 function budgetEditor(B){
-  return `<tbody><tr><td colspan="3" class="beditor">
+  return `<div class="card beditor">
+    <h3>Editar orçamento</h3>
+    <p class="hint">Digite os valores do seu jeito (ex.: 15.000 ou 3.875,23). Tudo é salvo na hora e aparece no outro celular.</p>
     <div class="fgrid">
-      <div class="fl"><label for="b-ceil">Teto da viagem (R$)</label><input id="b-ceil" data-bf="ceiling" inputmode="decimal" value="${B.ceiling}"></div>
+      <div class="fl"><label for="b-ceil">Teto da viagem (R$)</label><input id="b-ceil" data-bf="ceiling" inputmode="decimal" value="${B.ceiling?num(B.ceiling):""}" placeholder="0"></div>
+      <div class="fl"><label for="b-rate">Câmbio (R$ por €)</label><input id="b-rate" data-bf="rate" inputmode="decimal" value="${num(B.rate)}"></div>
     </div>
     <h4>Já pago (R$)</h4>
-    ${B.paid.map(p=>`<div class="erow"><input data-bf="paid-name" data-id="${p.id}" value="${esc(p.name)}" aria-label="Item pago"><input data-bf="paid-value" data-id="${p.id}" value="${p.value}" inputmode="decimal" aria-label="Valor em reais"><button type="button" class="ib del" data-bdel="paid" data-id="${p.id}" aria-label="Remover">${I.del}</button></div>`).join("")}
+    ${B.paid.map(p=>`<div class="erow"><input data-bf="paid-name" data-id="${p.id}" value="${esc(p.name)}" placeholder="O que foi pago (ex.: Passagens)" aria-label="Item pago"><input data-bf="paid-value" data-id="${p.id}" value="${p.value?num(p.value):""}" placeholder="0" inputmode="decimal" aria-label="Valor em reais"><button type="button" class="ib del" data-bdel="paid" data-id="${p.id}" aria-label="Remover ${esc(p.name)}">${I.del}</button></div>`).join("")||`<p class="hint">Nenhum pagamento.</p>`}
     <button type="button" class="btn sm add-line" data-badd="paid">${I.plus}Adicionar pagamento</button>
-    <h4>Previsto em solo (€)</h4>
-    ${B.plan.map(p=>`<div class="erow three"><input data-bf="plan-name" data-id="${p.id}" value="${esc(p.name)}" aria-label="Categoria"><input data-bf="plan-eur" data-id="${p.id}" value="${p.eur}" inputmode="decimal" aria-label="Previsto em euros"><button type="button" class="ib del" data-bdel="plan" data-id="${p.id}" aria-label="Remover">${I.del}</button><input class="note-in" data-bf="plan-note" data-id="${p.id}" value="${esc(p.note)}" placeholder="Observação" aria-label="Observação"></div>`).join("")}
+    <h4>Previsto em solo</h4>
+    ${B.plan.map(p=>`<div class="erow plan"><input data-bf="plan-name" data-id="${p.id}" value="${esc(p.name)}" placeholder="Categoria (ex.: Comida)" aria-label="Categoria"><input data-bf="plan-value" data-id="${p.id}" value="${p.value?num(p.value):""}" placeholder="0" inputmode="decimal" aria-label="Valor previsto"><select data-bf="plan-cur" data-id="${p.id}" aria-label="Moeda">${opt("EUR","€",p.cur!=="BRL")}${opt("BRL","R$",p.cur==="BRL")}</select><button type="button" class="ib del" data-bdel="plan" data-id="${p.id}" aria-label="Remover ${esc(p.name)}">${I.del}</button><input class="note-in" data-bf="plan-note" data-id="${p.id}" value="${esc(p.note)}" placeholder="Observação (opcional)" aria-label="Observação"></div>`).join("")||`<p class="hint">Nenhuma categoria.</p>`}
     <button type="button" class="btn sm add-line" data-badd="plan">${I.plus}Adicionar categoria</button>
-  </td></tr></tbody>`;
+    <div class="day-actions">
+      <button type="button" class="btn primary" data-bact2="done">${I.check}Concluir</button>
+      <button type="button" class="btn ghost danger" data-bact2="zero">Zerar todos os valores</button>
+    </div>
+  </div>`;
 }
 function setupBudget(){
-  const B=()=>S.getBudget(), commit=()=>{S.commitDoc("budget");renderBudget(true)};
-  $("budget-edit").addEventListener("click",()=>{editBudget=!editBudget;renderBudget(true)});
-  $("plan").addEventListener("change",e=>{
+  const B=()=>S.getBudget(), ed=$("budget-editor");
+  const commit=()=>{S.commitDoc("budget");renderBudget(true)};
+  $("budget-edit").addEventListener("click",()=>{editBudget=!editBudget;renderBudget(true);if(editBudget) ed.scrollIntoView({behavior:"smooth",block:"start"})});
+  ed.addEventListener("change",e=>{
     const t=e.target, f=t.dataset.bf; if(!f) return;
-    const b=B(), find=(arr)=>arr.find(x=>x.id===t.dataset.id);
+    const b=B(), find=arr=>arr.find(x=>x.id===t.dataset.id);
     if(f==="ceiling") b.ceiling=parseMoney(t.value);
+    else if(f==="rate"){ const v=parseMoney(t.value); if(v>0) b.rate=v; else { t.value=num(b.rate); return } }
     else if(f==="paid-name") find(b.paid).name=t.value.trim();
     else if(f==="paid-value") find(b.paid).value=parseMoney(t.value);
     else if(f==="plan-name") find(b.plan).name=t.value.trim();
-    else if(f==="plan-eur") find(b.plan).eur=parseMoney(t.value);
+    else if(f==="plan-value") find(b.plan).value=parseMoney(t.value);
+    else if(f==="plan-cur") find(b.plan).cur=t.value;
     else if(f==="plan-note") find(b.plan).note=t.value.trim();
-    S.commitDoc("budget"); renderBudget();
+    if(/value|ceiling|rate/.test(f)&&t.tagName==="INPUT"&&t.value.trim()) t.value=num(f==="ceiling"?b.ceiling:f==="rate"?b.rate:find(f.startsWith("paid")?b.paid:b.plan).value);
+    S.commitDoc("budget"); renderBudget(true,true);
   });
-  $("plan").addEventListener("click",e=>{
-    const a=e.target.closest("[data-badd],[data-bdel]"); if(!a) return;
+  ed.addEventListener("click",e=>{
+    const a=e.target.closest("[data-badd],[data-bdel],[data-bact2]"); if(!a) return;
     const b=B();
-    if(a.dataset.badd==="paid") b.paid.push({id:uid(),name:"",value:0});
-    else if(a.dataset.badd==="plan") b.plan.push({id:uid(),name:"",note:"",eur:0});
-    else { const k=a.dataset.bdel; b[k]=b[k].filter(x=>x.id!==a.dataset.id) }
+    if(a.dataset.bact2==="done"){ editBudget=false; renderBudget(true); toast("Orçamento salvo"); return }
+    if(a.dataset.bact2==="zero"){
+      if(!confirm("Zerar o teto, os pagamentos e o previsto? Os nomes das categorias e os gastos registrados continuam.")) return;
+      b.ceiling=0; b.paid.forEach(p=>p.value=0); b.plan.forEach(p=>p.value=0); commit(); toast("Valores zerados"); return;
+    }
+    let focusSel=null;
+    if(a.dataset.badd==="paid"){ const n={id:uid(),name:"",value:0}; b.paid.push(n); focusSel=`[data-bf="paid-name"][data-id="${n.id}"]` }
+    else if(a.dataset.badd==="plan"){ const n={id:uid(),name:"",note:"",value:0,cur:"EUR"}; b.plan.push(n); focusSel=`[data-bf="plan-name"][data-id="${n.id}"]` }
+    else { const k=a.dataset.bdel, x=b[k].find(y=>y.id===a.dataset.id); if(x.name&&!confirm(`Remover “${x.name}”?`)) return; b[k]=b[k].filter(y=>y!==x) }
     commit();
+    if(focusSel) ed.querySelector(focusSel)?.focus();
   });
   $("add-form").addEventListener("submit",ev=>{
     ev.preventDefault();
@@ -619,10 +647,6 @@ function setupBudget(){
     toast("Gasto registrado");
   });
   $("spent").addEventListener("click",e=>{const b=e.target.closest("[data-del]"); if(b&&confirm("Apagar este gasto?")) S.removeExpense(b.dataset.del)});
-  let t; $("rate").addEventListener("input",()=>{
-    const v=parseMoney($("rate").value); if(!(v>0)) return;
-    clearTimeout(t); t=setTimeout(()=>{ if(v===B().rate) return; B().rate=v; S.commitDoc("budget"); renderBudget(true) },600);
-  });
   $("conv-in").addEventListener("input",renderConv);
 }
 function renderConv(){

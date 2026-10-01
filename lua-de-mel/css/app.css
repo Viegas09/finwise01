@@ -352,3 +352,10 @@ details.more summary{cursor:pointer;font-weight:700;color:var(--seine)}
 .sync-state.offline svg,.sync-state.connecting svg{color:var(--gold)}
 .sync-state.error svg{color:var(--rose)}
 .card p > svg,.hint > svg{width:16px;height:16px;vertical-align:-3px;color:var(--seine)}
+.beditor h3{font-size:1.2rem}
+.beditor .hint{margin-top:4px}
+.erow.plan{grid-template-columns:1fr 96px 64px auto}
+.erow select{min-width:0;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);padding:9px 6px}
+@media (max-width:420px){.erow.plan{grid-template-columns:1fr 84px 60px auto}}
+.hint-box{background:var(--seine-soft);border-left:4px solid var(--seine);padding:10px 14px;border-radius:8px;margin:14px 0}
+#budget-edit svg{width:16px;height:16px}
